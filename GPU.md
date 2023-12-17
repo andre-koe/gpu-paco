@@ -100,11 +100,8 @@ author: André Königer
 
 ---
 
-# **Einführung in die Programmierung mit CUDA**
-
-<br>
-
-### Am Beispiel von Matrixmultiplikation
+# <br><br>Einführung in die Programmierung mit CUDA
+#### Am Beispiel von Matrixmultiplikation
 
 ---
 
@@ -502,7 +499,7 @@ Informationen:
 - usw.
 
 ---
-## Beispiel
+### Beispiel
 ```c++
 void query_device() {
 	int devNo = 0;     
@@ -534,7 +531,7 @@ Maximale Anzahl von Warps pro Multiprozessor: 48
 
 ---
 
-## Die kleinste schedulbare Einheit - Warp
+### Die kleinste schedulbare Einheit - Warp
 
 - Jeder Block wird in **Warps** zu je 32 Threads unterteilt.
 - Jeder **Warp** hat eine eindeutige Warp ID
@@ -548,7 +545,7 @@ Können einen der folgenden Zustände annehmen:
 - *stalled* (vgl. blocked)
 
 ---
-## Warp
+### Warp
 ![bg right height:600](<Pasted image 20231208220325.png>)
 
 
@@ -560,13 +557,13 @@ Ungünstige Blockgröße:
 
 
 ---
-## Ausführungsmodell SIMT
+### Ausführungsmodell SIMT
 
 Single Instruction Multiple Threads (spezialfall von SIMD)
 - Alle Threads innerhalb eines Warps werden synchron ausgeführt
 
 ---
-## SIMT vs SIMD
+### SIMT vs SIMD
 
 SIMT bietet höhere Flexibilität auf Kosten der Performance
 
@@ -576,7 +573,7 @@ SIMT bietet höhere Flexibilität auf Kosten der Performance
 
 ---
 
-## Warp Divergence
+### Warp Divergence
 
 Control flow statements mit divergierenden Pfaden (innerhalb eines Warps).
 
@@ -592,7 +589,7 @@ __global__ void this_causes_warp_divergence() {
 ```
 ---
 
-## Warp Divergence
+### Warp Divergence
 
 ![bg right height:600](<Pasted image 20231209131042.png>)
 
@@ -602,7 +599,7 @@ Divergierende Pfade werden seriell ausgeführt.
 
 ---
 
-## Warp Divergence
+### Warp Divergence
 
 **Metrik** für Warp Divergence ist die **branch efficiency**
 
@@ -610,7 +607,7 @@ $\text{Branch Efficiency} = 100\% \times \frac{\#\text{Branches}- \#\text{Diverg
 
 ---
 
-## Warp Divergence
+### Warp Divergence
 
 ```c++
 __global__ void this_does_not_cause_warp_divergence() {
@@ -626,7 +623,7 @@ __global__ void this_does_not_cause_warp_divergence() {
 ```
 ---
 
-## Warp Synchronisierung
+### Warp Synchronisierung
 
 Warps innerhalb eines Blocks nicht notwendigerweise synchron!
 
@@ -650,7 +647,7 @@ __global__ void modifyArray(int *data, int n) {
 </style>
 ---
 
-## Schlussfolgerungen
+### Schlussfolgerungen
 
 - Warps entsprechen Threads in klassischer Programmierung
 - Blocksize = $X \times Warpsize$ vermeidet nutzlose Threads
@@ -660,7 +657,7 @@ __global__ void modifyArray(int *data, int n) {
 
 ---
 
-## **Profiling Tools** 
+### **Profiling Tools** 
 
 **Nsight Compute**
 - UI
@@ -673,13 +670,13 @@ __global__ void modifyArray(int *data, int n) {
 
 
 ---
-## Nvidia Nsight Compute
+### Nvidia Nsight Compute
 
 ![width:800  nvidia nsight compute details](image-2.png)
 
 ---
 
-## Nvidia nvprof
+### Nvidia nvprof
 
 ![width:1000 nvidia nvprof cli](nvprof_sudo.png)
 
@@ -772,7 +769,7 @@ Thread Block Clusters als neue Abstraktionsebene
 
 ---
 
-## Local- vs Shared- vs Global-Memory 
+### Local- vs Shared- vs Global-Memory 
 
 | Memory Type | Location | Cached | Access | Scope                  | Lifetime       |
 |-------------|----------|--------|--------|------------------------|----------------|
@@ -784,7 +781,7 @@ Thread Block Clusters als neue Abstraktionsebene
 * Implementierung Abhängig von CC
 ---
 
-## Local- vs Shared- vs Global-Memory 
+### Local- vs Shared- vs Global-Memory 
 
 Speicherzugriffszeit:
 
@@ -795,7 +792,7 @@ Speicherzugriffszeit:
 
 ---
 
-## Besondere Speicherbereiche
+### Besondere Speicherbereiche
 
 - Zero Copy Memory
 - Constant Memory
@@ -963,7 +960,7 @@ int main(void) {
 
 ---
 
-**Performance Boost durch Reduktion globaler Speicherzugriffe**
+### Performance Boost durch Reduktion globaler Speicherzugriffe
 
 Im Falle von Tiling: $2 \cdot size * size$
 ```c++
