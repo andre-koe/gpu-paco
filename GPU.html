@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>GPU.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="cuda">CUDA</h1>
+<hr>
+<p><strong>Hello CUDA</strong></p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">"cuda_runtime.h"</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">"device_launch_parameters.h"</span></span>
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-comment">/**
+ * KernelFunktion (Ausführung auf der GPU)
+ */</span>
+<span class="hljs-function">__global__ <span class="hljs-keyword">void</span> <span class="hljs-title">hello_cuda</span><span class="hljs-params">()</span> 
+</span>{
+	<span class="hljs-built_in">printf</span>(<span class="hljs-string">"Hello CUDA!\n"</span>);
+}
+
+<span class="hljs-comment">/**
+ * Host Code (Ausführung auf der CPU)
+ */</span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> 
+</span>{
+        hello_cuda &lt;&lt;&lt;<span class="hljs-number">1</span>,<span class="hljs-number">1</span>&gt;&gt;&gt; (); <span class="hljs-comment">// Kernel Launch, was ist '&lt;&lt; &lt;1,1&gt; &gt;&gt;' ?  </span>
+        cudaDeviceSynchronize(); 
+        cudaDeviceReset(); 
+	<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+
+</div></code></pre>
+<hr>
+<h2 id="modifiers"><strong>Modifiers</strong></h2>
+<p><strong>Kernelfunktion</strong></p>
+<pre class="hljs"><code><div><span class="hljs-function">__global__ <span class="hljs-keyword">void</span> <span class="hljs-title">called_from_host</span><span class="hljs-params">(<span class="hljs-keyword">int</span>* some_data, <span class="hljs-keyword">int</span> <span class="hljs-built_in">size</span>)</span> </span>{ ... }
+</div></code></pre>
+<p><strong>Devicefunktion</strong></p>
+<pre class="hljs"><code><div><span class="hljs-function">__device__ <span class="hljs-keyword">int</span> <span class="hljs-title">called_from_device</span><span class="hljs-params">(<span class="hljs-keyword">int</span>* some_data, <span class="hljs-keyword">int</span> <span class="hljs-built_in">size</span>)</span> </span>{ ... }
+</div></code></pre>
+<hr>
+<p><strong>Modifiers</strong></p>
+<pre class="hljs"><code><div>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">"cuda_runtime.h"</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">"device_launch_parameters.h"</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;string&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-function">__device__ <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span>* <span class="hljs-title">part_two</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-string">"CUDA"</span>;
+}
+
+<span class="hljs-function">__device__ <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span>* <span class="hljs-title">part_one</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-string">"Hello"</span>;
+}
+
+<span class="hljs-function">__device__ <span class="hljs-keyword">void</span> <span class="hljs-title">result</span><span class="hljs-params">(<span class="hljs-keyword">char</span>* <span class="hljs-built_in">buffer</span>, <span class="hljs-keyword">size_t</span> bufferSize)</span> </span>{
+    <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span>* p1 = part_one();
+    <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span>* p2 = part_two();
+    <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span>* to_append = <span class="hljs-string">"!!!"</span>;
+    
+    <span class="hljs-built_in">snprintf</span>(<span class="hljs-built_in">buffer</span>, bufferSize, <span class="hljs-string">"%s %s%s"</span>, p1, p2, to_append);
+}
+
+<span class="hljs-function">__global__ <span class="hljs-keyword">void</span> <span class="hljs-title">i_am_api</span><span class="hljs-params">()</span>
+</span>{
+    <span class="hljs-keyword">char</span> <span class="hljs-built_in">buffer</span>[<span class="hljs-number">50</span>]; 
+    result(<span class="hljs-built_in">buffer</span>, <span class="hljs-keyword">sizeof</span>(<span class="hljs-built_in">buffer</span>));
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%s\n"</span>, <span class="hljs-built_in">buffer</span>);
+}
+
+<span class="hljs-comment">// Host Code wie zuvor</span>
+</div></code></pre>
+<hr>
+<h2 id="funktionsumfang-in-cuda"><strong>Funktionsumfang in CUDA</strong></h2>
+<p>GPUs sind primär Rechenmaschinen ihre Stärke liegt in der hohen parallelisierbarkeit einfacher Rechenoperationen</p>
+<ul>
+<li>Eingeschränkte Unterstützung der  C/C++ Standard Libraries</li>
+</ul>
+<p><strong>Stattdessen spezialisierte Libraries wie</strong>:</p>
+<ul>
+<li>cuFFT - CUDA Fast Fourier Transform</li>
+<li>cuDNN - CUDA Deep Neural Network</li>
+<li>Thrust - Parallele Algorithmen Bibliothek</li>
+<li>DALI - NVIDIA Data Loading Library</li>
+</ul>
+<hr>
+<h2 id="%C3%BCbersicht-wichtiger-funktionen-der-cuda-runtime-api"><strong>Übersicht wichtiger Funktionen der CUDA Runtime API</strong></h2>
+<pre class="hljs"><code><div>...
+cudaDeviceSynchronize();
+cudaDeviceReset();
+...
+</div></code></pre>
+<ul>
+<li><code>cudaDeviceSynchronize()</code> vgl. join()</li>
+<li><code>cudaDeviceReset()</code></li>
+</ul>
+<hr>
+<h2 id="kernel-launch"><strong>Kernel Launch</strong></h2>
+<pre class="hljs"><code><div>	hello_cuda &lt;&lt;&lt;a,b&gt;&gt;&gt;(); 
+</div></code></pre>
+<pre class="hljs"><code><div>dim3 grid, block;
+block = dim3(<span class="hljs-number">32</span>); <span class="hljs-comment">// dim3(32,1,1) == 32</span>
+grid = dim3(<span class="hljs-number">48</span>); <span class="hljs-comment">// dim3(48,1,1) == 48</span>
+
+hello_cuda &lt;&lt;&lt;grid, block&gt;&gt;&gt;();
+</div></code></pre>
+<p>Ausgabe: 32 * 48 = 1536 mal Hello CUDA</p>
+<hr>
+<h2 id="thread-organization"><strong>Thread Organization</strong></h2>
+<br>
+<br>
+<ul>
+<li>Thread Blöcke</li>
+<li>Grids</li>
+<li>Threads</li>
+</ul>
+<hr>
+<h3 id="thread-block">Thread Block</h3>
+<p>Threads werden in <strong>Blöcken</strong> organisiert</p>
+<p><img src="image-1.png" alt="Alt text"></p>
+<p>Für jeden Block gilt: $X \times Y\times Z \leq 1024$ (bzw. 512 für CC $\geq$ )</p>
+<hr>
+<h3 id="thread-block">Thread Block</h3>
+<ul>
+<li>Jeder Streaming Multiprozessor (SM) führt mindestens einen Block aus.</li>
+<li>Hat eine BlockID (blockIdx.x, blockIdx.y, blockIdx.z)</li>
+<li>Wird in <strong>Warps</strong> unterteilt</li>
+</ul>
+<hr>
+<h3 id="grid">Grid</h3>
+<p>Blöcke werden in <strong>Grids</strong> organisiert</p>
+<ul>
+<li>Jedes Grid kann $(2^{31}-1) * 65535 * 65535$ Blöcke beinhalten</li>
+</ul>
+<br>
+<p>$$#threads = 1024 * (2^{31}-1) * 65535 * 65535 = 2.305.843.008.139.952.128$$
+(theoretisches Maximum CC $\geq$ 7.5)</p>
+<hr>
+<p><img src="grid-of-thread-blocks.png" alt="bg width:1250 text"><!-- .element: style="display: flex" --></p>
+<hr>
+<h3 id="thread">Thread</h3>
+<br>
+<p><strong>threadId</strong> ist nur innerhalb eines blocks eindeutig!</p>
+<pre class="hljs"><code><div><span class="hljs-comment">// Launch Konfiguration grid = dim3(48, 1, 1) &amp; block = dim(256, 1, 1)</span>
+<span class="hljs-keyword">int</span> gid = blockIdx.x + threadIdx.x
+</div></code></pre>
+<pre class="hljs"><code><div><span class="hljs-comment">// Launch Konfiguration grid = dim3(48, 48, 1) &amp; block = dim(256, 1, 1)</span>
+<span class="hljs-keyword">int</span> tid = threadIdx.x;
+<span class="hljs-keyword">int</span> block_offset = blockIdx.x * blockDim.x;
+<span class="hljs-keyword">int</span> row_offset = gridDim.x * blockDim.x * blockIdx.y;
+<span class="hljs-keyword">int</span> gid = row_offset + block_offset + tid;
+</div></code></pre>
+<hr>
+<br>
+<p>Abhängig vom Problem benötigen wir keine <strong>gid</strong></p>
+<pre class="hljs"><code><div><span class="hljs-comment">// Launch Konfiguration grid = dim(48, 48, 1) &amp; block = dim(128, 128, 1)</span>
+<span class="hljs-comment">// Für Matrizenberechnung</span>
+<span class="hljs-keyword">int</span> row = blockIdx.y * blockDim.y + threadIdx.y;
+<span class="hljs-keyword">int</span> col = blockIdx.x * blockDim.x + threadIdx.x;
+
+</div></code></pre>
+<hr>
+<p><strong>Matrixmultiplaktion</strong></p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">"cuda_runtime.h"</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">"device_launch_parameters.h"</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">"time.h"</span></span>
+
+<span class="hljs-function">__device__ <span class="hljs-keyword">float</span> <span class="hljs-title">multiply</span><span class="hljs-params">(<span class="hljs-keyword">float</span> a, <span class="hljs-keyword">float</span> b)</span> </span>{
+    <span class="hljs-keyword">return</span> a * b;
+}
+
+<span class="hljs-function">__global__ <span class="hljs-keyword">void</span> <span class="hljs-title">mat_mul</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">int</span> row = blockIdx.y * blockDim.y + threadIdx.y;
+    <span class="hljs-keyword">int</span> col = blockIdx.x * blockDim.x + threadIdx.x;
+
+    <span class="hljs-comment">// Hier Matrixmutiplikation ausführen</span>
+
+}
+
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">fillMatrix</span><span class="hljs-params">(<span class="hljs-keyword">float</span> *matrix, <span class="hljs-keyword">int</span> <span class="hljs-built_in">width</span>, <span class="hljs-keyword">int</span> <span class="hljs-built_in">height</span>)</span> </span>{
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-built_in">height</span>; ++i) {
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; <span class="hljs-built_in">width</span>; ++j) {
+            matrix[i * <span class="hljs-built_in">width</span> + j] = (<span class="hljs-keyword">float</span>)rand() / (<span class="hljs-keyword">float</span>)(RAND_MAX / <span class="hljs-number">10</span>);
+        }
+    }
+}
+
+</div></code></pre>
+<hr>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span> </span>{
+    <span class="hljs-keyword">int</span> matSize = <span class="hljs-number">1000</span>;
+    <span class="hljs-keyword">int</span> matSizeBytes = matSize * matSize * <span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">float</span>);
+    srand(time(<span class="hljs-literal">NULL</span>));
+
+    <span class="hljs-keyword">float</span> *matrixA, *matrixB, *result;
+    *matrixA = (<span class="hljs-keyword">float</span> *)<span class="hljs-built_in">malloc</span>(matSizeBytes);
+    *matrixB = (<span class="hljs-keyword">float</span> *)<span class="hljs-built_in">malloc</span>(matSizeBytes);
+    *result = (<span class="hljs-keyword">float</span> *)<span class="hljs-built_in">malloc</span>(matSizeBytes);    
+    
+    <span class="hljs-keyword">if</span> (matrixA == <span class="hljs-literal">NULL</span> || matrixB == <span class="hljs-literal">NULL</span> || result == <span class="hljs-literal">NULL</span>) {
+        <span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">"Speicherzuweisung fehlgeschlagen.\n"</span>);
+        <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+    }
+    fillMatrix(matrixA, matSize, matSize);
+    fillMatrix(matrixA, matSize, matSize);
+    
+    <span class="hljs-function">dim3 <span class="hljs-title">blockSize</span><span class="hljs-params">(<span class="hljs-number">10</span>,<span class="hljs-number">10</span>)</span></span>;
+    <span class="hljs-function">dim3 <span class="hljs-title">gridSize</span><span class="hljs-params">((matSize + blockSize.x<span class="hljs-number">-1</span>)/blockSize.x, (matSize + blockSize.y<span class="hljs-number">-1</span>)/blockSize.y)</span></span>;
+
+    <span class="hljs-comment">// Wie übergeben wir die Matrix bzw. allgemein Werte an die GPU?</span>
+    mat_mul &lt;&lt;&lt;gridSize, blockSize&gt;&gt;&gt;();
+
+    cudaDeviceSynchronize();
+    cudaDeviceReset();
+}
+</div></code></pre>
+<hr>
+<h2 id="%C3%BCbersicht-wichtiger-funktionen"><strong>Übersicht wichtiger Funktionen</strong></h2>
+<ul>
+<li><code>cudaMalloc(void **devPtr, size_t size)</code> vgl. malloc()</li>
+<li><code>cudaMemcpy(void *dest, void *scr, size_t size, cudaMemcpyKind m)</code></li>
+<li><code>cudaFree()</code> vgl. free()</li>
+</ul>
+<p><strong>cudaMemcpyKind</strong></p>
+<ul>
+<li>cudaMemcpyHostToHost</li>
+<li>cudaMemcpyHostToDevice</li>
+<li>cudaMemcpyDeviceToHost</li>
+<li>cudaMemcpyDeviceToDevice</li>
+</ul>
+<hr>
+<p><strong>Matrixmultiplaktion: Mit Datenübertragung</strong></p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">"cuda_runtime.h"</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">"device_launch_parameters.h"</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">"time.h"</span></span>
+
+<span class="hljs-function">__device__ <span class="hljs-keyword">float</span> <span class="hljs-title">multiply</span><span class="hljs-params">(<span class="hljs-keyword">float</span> a, <span class="hljs-keyword">float</span> b)</span> </span>{ <span class="hljs-keyword">return</span> a * b; }
+
+<span class="hljs-function">__global__ <span class="hljs-keyword">void</span> <span class="hljs-title">mat_mul</span><span class="hljs-params">(<span class="hljs-keyword">float</span> *matA, <span class="hljs-keyword">float</span> *matB, <span class="hljs-keyword">float</span> *res, <span class="hljs-keyword">int</span> <span class="hljs-built_in">size</span>)</span> </span>{
+    <span class="hljs-keyword">int</span> row = blockIdx.y * blockDim.y + threadIdx.y;
+    <span class="hljs-keyword">int</span> col = blockIdx.x * blockDim.x + threadIdx.x;
+
+    <span class="hljs-keyword">if</span> (row &lt; <span class="hljs-built_in">size</span> &amp;&amp; col &lt; <span class="hljs-built_in">size</span>) {
+        <span class="hljs-keyword">float</span> sum = <span class="hljs-number">0.0</span>;
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> k = <span class="hljs-number">0</span>; k &lt; <span class="hljs-built_in">size</span>; k++) {
+            sum += multiply(matA[row * <span class="hljs-built_in">size</span> + k], matB[k * <span class="hljs-built_in">size</span> + col]);
+        }
+        res[row * <span class="hljs-built_in">size</span> + col] = sum;
+    }
+}
+
+<span class="hljs-comment">// fill Matrix unverändert</span>
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">fillMatrix</span><span class="hljs-params">(<span class="hljs-keyword">float</span> *matrix, <span class="hljs-keyword">int</span> <span class="hljs-built_in">width</span>, <span class="hljs-keyword">int</span> <span class="hljs-built_in">height</span>)</span> </span>{...}
+
+</div></code></pre>
+<hr>
+<p><strong>Matrixmultiplaktion: Mit Datenübertragung</strong></p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span> </span>{
+    <span class="hljs-keyword">int</span> matSize = <span class="hljs-number">1000</span>;
+    <span class="hljs-keyword">int</span> matSizeBytes = <span class="hljs-number">1000</span> * <span class="hljs-number">1000</span> * <span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">float</span>);
+
+    srand(time(<span class="hljs-literal">NULL</span>));
+
+    <span class="hljs-keyword">float</span> *h_matA, *h_matB, *h_res, *d_matA, *d_matB, *d_res;
+   
+    h_matA = (<span class="hljs-keyword">float</span> *)<span class="hljs-built_in">malloc</span>(matSizeBytes);
+    h_matB = (<span class="hljs-keyword">float</span> *)<span class="hljs-built_in">malloc</span>(matSizeBytes);
+    h_res = (<span class="hljs-keyword">float</span> *)<span class="hljs-built_in">malloc</span>(matSizeBytes);    
+    
+    <span class="hljs-keyword">if</span> (h_matA == <span class="hljs-literal">NULL</span> || h_matB == <span class="hljs-literal">NULL</span> || h_res == <span class="hljs-literal">NULL</span>) { <span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">"Speicherzuweisung fehlgeschlagen.\n"</span>);
+        <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+    }
+    fillMatrix(h_matA, matSize, matSize);
+    fillMatrix(h_matB, matSize, matSize);
+
+    cudaMalloc((<span class="hljs-keyword">void</span>**)&amp;d_matA, matSizeBytes); <span class="hljs-comment">// Speicherallokation auf dem Device</span>
+    cudaMalloc((<span class="hljs-keyword">void</span>**)&amp;d_matB, matSizeBytes);
+    cudaMalloc((<span class="hljs-keyword">void</span>**)&amp;d_res, matSizeBytes);
+    ...
+</div></code></pre>
+<hr>
+<p><strong>Matrixmultiplikation: mit Datenübertragung</strong></p>
+<pre class="hljs"><code><div>    ...
+    cudaMemcpy(d_matA, h_matA, matSizeByte, cudaMemcpyHostToDevice); <span class="hljs-comment">// Von Host zu Device</span>
+    cudaMemcpy(d_matB, h_matB, matSizeByte, cudaMemcpyHostToDevice);
+
+    <span class="hljs-function">dim3 <span class="hljs-title">blockSize</span><span class="hljs-params">(<span class="hljs-number">10</span>,<span class="hljs-number">10</span>)</span></span>;
+    <span class="hljs-function">dim3 <span class="hljs-title">gridSize</span><span class="hljs-params">((matSize + blockSize.x<span class="hljs-number">-1</span>)/blockSize.x, (matSize + blockSize.y<span class="hljs-number">-1</span>)/blockSize.y)</span></span>;
+
+    mat_mul &lt;&lt;&lt;gridSize, blockSize&gt;&gt;&gt;(d_matA, d_matB, d_res, matSize);
+
+    cudaDeviceSynchronize();
+    cudaMemcpy(h_res, d_res, matSizeByte, cudaMemcpyDeviceToHost); <span class="hljs-comment">// Von Device zu Host</span>
+    cudaFree(d_matA); cudaFree(d_matB); cudaFree(d_res); <span class="hljs-comment">// Speicherfreigabe Device</span>
+    <span class="hljs-built_in">free</span>(h_matA); <span class="hljs-built_in">free</span>(h_matB); <span class="hljs-built_in">free</span>(h_res); <span class="hljs-comment">// Speicherfreigabe Host</span>
+    cudaDeviceReset();
+}
+</div></code></pre>
+<hr>
+<h2 id="error-handling"><strong>Error Handling</strong></h2>
+<p>Returntype <code>cudaError</code></p>
+<pre class="hljs"><code><div>cudaError_t status = cudaMalloc((<span class="hljs-keyword">void</span>**)&amp;devicePtr, <span class="hljs-built_in">size</span>);
+<span class="hljs-keyword">if</span> (status != cudaSuccess) {
+    <span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">"cudaMalloc failed: %s\n"</span>, cudaGetErrorString(status));
+    <span class="hljs-comment">// Fehlerbehandlung...</span>
+}
+</div></code></pre>
+<hr>
+<h3 id="error-handling">Error Handling</h3>
+<p>Was wenn der Funktionsaufruf keinen Wert zurückgibt?</p>
+<p><code>cudaGetLastError()</code></p>
+<pre class="hljs"><code><div>a_kernel_function&lt;&lt;&lt;grid, blocks&gt;&gt;&gt;(...);
+
+cudaError_t status = cudaGetLastError();
+<span class="hljs-keyword">if</span> (status != cudaSuccess) {
+    <span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">"Kernel launch failed: %s\n"</span>, cudaGetErrorString(status));
+    <span class="hljs-comment">// Fehlerbehandlung</span>
+}
+</div></code></pre>
+<hr>
+<h2 id="abfragen-von-hardwareinformationen-%C3%BCber-cudadeviceprop"><strong>Abfragen von Hardwareinformationen über cudaDeviceProp</strong></h2>
+<p><code>cudaDeviceProp properties</code> &amp; <code>cudaGetDeviceProperties(&amp;properties, deviceNumber)</code></p>
+<p>Informationen:</p>
+<ul>
+<li>Gerätename</li>
+<li>#Multiprozessoren</li>
+<li>Warpsize</li>
+<li>usw.</li>
+</ul>
+<hr>
+<h2 id="beispiel">Beispiel</h2>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">query_device</span><span class="hljs-params">()</span> </span>{
+	<span class="hljs-keyword">int</span> devNo = <span class="hljs-number">0</span>;     
+	cudaDeviceProp iProp;     
+	cudaGetDeviceProperties(&amp;iProp, devNo);      
+	<span class="hljs-built_in">printf</span>(<span class="hljs-string">"Anzahl der MP: %d\n"</span>, iProp.multiProcessorCount);     
+	<span class="hljs-built_in">printf</span>(<span class="hljs-string">"Max Anzahl von Threads pro MP: %d\n"</span>, iProp.maxThreadsPerMultiProcessor);   
+	<span class="hljs-built_in">printf</span>(<span class="hljs-string">"Warp-Größe: %d\n"</span>, iProp.warpSize);     
+	<span class="hljs-built_in">printf</span>(<span class="hljs-string">"Warps pro MP: %d\n"</span>, iProp.maxThreadsPerMultiProcessor / iProp.warpSize); 
+}
+</div></code></pre>
+<pre class="hljs"><code><div>Ausgabe:
+Anzahl der Multiprozessoren: 48 
+Maximale Anzahl von Threads pro Multiprozessor: 1536 
+Warp-Größe: 32 
+Maximale Anzahl von Warps pro Multiprozessor: 48
+</div></code></pre>
+<hr>
+<h2 id="das-cuda-execution-model"><strong>Das CUDA Execution Model</strong></h2>
+<ul>
+<li><strong>Warps</strong></li>
+<li><strong>SIMT</strong></li>
+<li><strong>Warp Divergence</strong></li>
+<li><strong>Warp Synchronisierung</strong></li>
+<li><strong>Schlussfolgerungen</strong></li>
+</ul>
+<hr>
+<h2 id="die-kleinste-schedulbare-einheit---warp">Die kleinste schedulbare Einheit - Warp</h2>
+<ul>
+<li>Jeder Block wird in <strong>Warps</strong> zu je 32 Threads unterteilt.</li>
+<li>Jeder <strong>Warp</strong> hat eine eindeutige Warp ID</li>
+<li>Warps werden nach <strong>SIMT</strong> ausgeführt</li>
+<li>Warps teilen sich <strong>gemeinsamen Speicher</strong> innerhalb eines SM</li>
+</ul>
+<p>Können einen der folgenden Zustände annehmen:</p>
+<ul>
+<li><em>selected</em> (vgl. running)</li>
+<li><em>eligible</em> (vgl. ready)</li>
+<li><em>stalled</em> (vgl. blocked)</li>
+</ul>
+<hr>
+<h2 id="warp">Warp</h2>
+<p><img src="Pasted image 20231208220325.png" alt="bg right height:600"></p>
+<p>Ungünstige Blockgröße:</p>
+<ul>
+<li>verschwendetes Parallelisierungspotential</li>
+<li>worst case: 2304 Threads</li>
+<li>best case:
+73.728 Threads</li>
+</ul>
+<hr>
+<h2 id="ausf%C3%BChrungsmodell-simt">Ausführungsmodell SIMT</h2>
+<p>Single Instruction Multiple Threads (spezialfall von SIMD)</p>
+<ul>
+<li>Alle Threads innerhalb eines Warps werden synchron ausgeführt</li>
+</ul>
+<hr>
+<h2 id="simt-vs-simd">SIMT vs SIMD</h2>
+<p>SIMT bietet höhere Flexibilität auf Kosten der Performance</p>
+<ul>
+<li><strong>Single instruction, multiple register sets</strong></li>
+<li><strong>Single instruction, multiple addresses</strong></li>
+<li><strong>Single instruction, multiple flow paths</strong></li>
+</ul>
+<hr>
+<h2 id="warp-divergence">Warp Divergence</h2>
+<p>Control flow statements mit divergierenden Pfaden (innerhalb eines Warps).</p>
+<pre class="hljs"><code><div><span class="hljs-function">__global__ <span class="hljs-keyword">void</span> <span class="hljs-title">this_causes_warp_divergence</span><span class="hljs-params">()</span> </span>{
+	<span class="hljs-keyword">int</span> tid = threadIdx.x;
+	<span class="hljs-keyword">if</span> (tid % <span class="hljs-number">2</span> == <span class="hljs-number">0</span>) {
+		<span class="hljs-comment">// do something</span>
+	} <span class="hljs-keyword">else</span> {
+		<span class="hljs-comment">// do something else</span>
+	}
+}
+</div></code></pre>
+<hr>
+<h2 id="warp-divergence">Warp Divergence</h2>
+<p><img src="Pasted image 20231209131042.png" alt="bg right height:600"></p>
+<p>Divergierende Pfade werden seriell ausgeführt.</p>
+<p><strong>Performanceverlust: 50%</strong></p>
+<hr>
+<h2 id="warp-divergence">Warp Divergence</h2>
+<p><strong>Metrik</strong> für Warp Divergence ist die <strong>branch efficiency</strong></p>
+<p>$\text{Branch Efficiency} = 100% \times \frac{#\text{Branches}- #\text{Divergent\ Branches}}{\text{#Branches}}$</p>
+<hr>
+<h2 id="warp-divergence">Warp Divergence</h2>
+<pre class="hljs"><code><div><span class="hljs-function">__global__ <span class="hljs-keyword">void</span> <span class="hljs-title">this_does_not_cause_warp_divergence</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-comment">// Jeder Threadblock hat 64 Threads</span>
+    <span class="hljs-keyword">int</span> tid = blockIdx.x * threadIdx.x;
+
+    <span class="hljs-keyword">if</span> (tid / <span class="hljs-number">32</span> &lt; <span class="hljs-number">1</span>) {
+        <span class="hljs-comment">// do something</span>
+    } <span class="hljs-keyword">else</span> {
+        <span class="hljs-comment">// do something else</span>
+    }
+}
+</div></code></pre>
+<hr>
+<h2 id="warp-synchronisierung">Warp Synchronisierung</h2>
+<p>Warps innerhalb eines Blocks nicht notwendigerweise synchron!</p>
+<p>Synchronisierung erfolgt mittels:
+<code>__syncthreads()</code> (vgl. pthread_barrier_wait(...))</p>
+<pre class="hljs"><code><div><span class="hljs-function">__global__ <span class="hljs-keyword">void</span> <span class="hljs-title">modifyArray</span><span class="hljs-params">(<span class="hljs-keyword">int</span> *data, <span class="hljs-keyword">int</span> n)</span> </span>{
+    <span class="hljs-keyword">int</span> index = blockIdx.x * blockDim.x + threadIdx.x;
+    data[index] += <span class="hljs-number">1</span>;
+    __syncthreads();
+    <span class="hljs-keyword">if</span> (index % <span class="hljs-number">2</span> == <span class="hljs-number">0</span>) {
+        data[index] *= <span class="hljs-number">2</span>;
+    }
+}
+</div></code></pre>
+<style>
+    section {
+
+    }
+</style>
+<hr>
+<h2 id="schlussfolgerungen">Schlussfolgerungen</h2>
+<ul>
+<li>Warps entsprechen Threads in klassischer Programmierung</li>
+<li>Blocksize = $X \times Warpsize$ vermeidet nutzlose Threads</li>
+<li>Control Flow Statements - Warp Divergence vermeiden</li>
+<li>Warps innerhalb eines Blocks keine synchrone Ausführung</li>
+</ul>
+<hr>
+<h2 id="profiling-tools"><strong>Profiling Tools</strong></h2>
+<p><strong>Nsight Compute</strong></p>
+<ul>
+<li>UI</li>
+<li>integrierter Occupancy Calculator</li>
+<li>verschiedene Metriken</li>
+<li>viele weitere Funktionen</li>
+</ul>
+<p><strong>nvprof</strong></p>
+<ul>
+<li>Commandline Tool für Cuda Capability &lt; 7.5</li>
+</ul>
+<hr>
+<h2 id="nvidia-nsight-compute">Nvidia Nsight Compute</h2>
+<p><img src="image-2.png" alt="width:800  nvidia nsight compute details"></p>
+<hr>
+<h2 id="nvidia-nvprof">Nvidia nvprof</h2>
+<p><img src="nvprof_sudo.png" alt="width:1000 nvidia nvprof cli"></p>
+<hr>
+<p><strong>Matrixmultiplikation: Anpassung der Blockgröße</strong></p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">"cuda_runtime.h"</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">"device_launch_parameters.h"</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">"time.h"</span></span>
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> TILE_DIM 16; <span class="hljs-comment">// Tile Dimension (16 * 16 = 256) Optimale Blockgröße</span></span>
+
+<span class="hljs-function">__device__ <span class="hljs-keyword">float</span> <span class="hljs-title">multiply</span><span class="hljs-params">(<span class="hljs-keyword">float</span> a, <span class="hljs-keyword">float</span> b)</span> </span>{ <span class="hljs-keyword">return</span> a * b; }
+
+<span class="hljs-function">__global__ <span class="hljs-keyword">void</span> <span class="hljs-title">mat_mul</span><span class="hljs-params">(<span class="hljs-keyword">float</span> *matA, <span class="hljs-keyword">float</span> *matB, <span class="hljs-keyword">float</span> *res, <span class="hljs-keyword">int</span> <span class="hljs-built_in">size</span>)</span> </span>{
+    <span class="hljs-keyword">int</span> row = blockIdx.y * blockDim.y + threadIdx.y;
+    <span class="hljs-keyword">int</span> col = blockIdx.x * blockDim.x + threadIdx.x;
+
+    <span class="hljs-keyword">if</span> (row &lt; <span class="hljs-built_in">size</span> &amp;&amp; col &lt; <span class="hljs-built_in">size</span>) {
+         <span class="hljs-keyword">float</span> sum = <span class="hljs-number">0.0</span>;
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; TILE_DIM; i++) {
+            sum += multiply(matA[threadIdx.y][i], matB[i][threadIdx.x]);
+        }
+        
+        res[row * N + col] = sum;
+    }
+}
+
+<span class="hljs-comment">// fill Matrix unverändert</span>
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">fillMatrix</span><span class="hljs-params">(<span class="hljs-keyword">float</span> *matrix, <span class="hljs-keyword">int</span> <span class="hljs-built_in">width</span>, <span class="hljs-keyword">int</span> <span class="hljs-built_in">height</span>)</span> </span>{...}
+</div></code></pre>
+<hr>
+<p><strong>Matrixmultiplikation: Anpassung der Blockgröße</strong></p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span> </span>{
+    <span class="hljs-keyword">int</span> matSize = <span class="hljs-number">1024</span>; <span class="hljs-comment">// Neue größe Teilbar durch 32 - vermeidung von überprüfung im Kernel</span>
+    <span class="hljs-keyword">int</span> matSizeBytes = matSize * matSize * <span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">float</span>);
+
+    srand(time(<span class="hljs-literal">NULL</span>));
+
+    <span class="hljs-keyword">float</span> *h_matA, *h_matB, *h_res, *d_matA, *d_matB, *d_res;
+   
+    h_matA = (<span class="hljs-keyword">float</span> *)<span class="hljs-built_in">malloc</span>(matSizeBytes);
+    h_matB = (<span class="hljs-keyword">float</span> *)<span class="hljs-built_in">malloc</span>(matSizeBytes);
+    h_res = (<span class="hljs-keyword">float</span> *)<span class="hljs-built_in">malloc</span>(matSizeBytes);    
+    
+    <span class="hljs-keyword">if</span> (h_matA == <span class="hljs-literal">NULL</span> || h_matB == <span class="hljs-literal">NULL</span> || h_res == <span class="hljs-literal">NULL</span>) { <span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">"Speicherzuweisung fehlgeschlagen.\n"</span>);
+        <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+    }
+    fillMatrix(h_matA, matSize, matSize);
+    fillMatrix(h_matB, matSize, matSize);
+
+    cudaMalloc((<span class="hljs-keyword">void</span>**)&amp;d_matA, matSizeBytes); <span class="hljs-comment">// Speicherallokation auf dem Device</span>
+    cudaMalloc((<span class="hljs-keyword">void</span>**)&amp;d_matB, matSizeBytes);
+    cudaMalloc((<span class="hljs-keyword">void</span>**)&amp;d_res, matSizeBytes);
+    ...
+</div></code></pre>
+<hr>
+<p><strong>Matrixmultiplikation: mit Tiling</strong></p>
+<pre class="hljs"><code><div>    ...
+    cudaMemcpy(d_matA, h_matA, matSizeByte, cudaMemcpyHostToDevice); <span class="hljs-comment">// Von Host zu Device</span>
+    cudaMemcpy(d_matB, h_matB, matSizeByte, cudaMemcpyHostToDevice);
+
+    <span class="hljs-function">dim3 <span class="hljs-title">blockSize</span><span class="hljs-params">(TILE_DIM,TILE_DIM)</span></span>;
+    <span class="hljs-function">dim3 <span class="hljs-title">gridSize</span><span class="hljs-params">((matSize + blockSize.x<span class="hljs-number">-1</span>)/blockSize.x, (matSize + blockSize.y<span class="hljs-number">-1</span>)/blockSize.y)</span></span>;
+
+    mat_mul &lt;&lt;&lt;gridSize, blockSize&gt;&gt;&gt;(d_matA, d_matB, d_res, matSize);
+
+    cudaDeviceSynchronize();
+    cudaMemcpy(h_res, d_res, matSizeByte, cudaMemcpyDeviceToHost); <span class="hljs-comment">// Von Device zu Host</span>
+    cudaFree(d_matA); cudaFree(d_matB); cudaFree(d_res); <span class="hljs-comment">// Speicherfreigabe Device</span>
+    <span class="hljs-built_in">free</span>(h_matA); <span class="hljs-built_in">free</span>(h_matB); <span class="hljs-built_in">free</span>(h_res); <span class="hljs-comment">// Speicherfreigabe Host</span>
+    cudaDeviceReset();
+}
+</div></code></pre>
+<hr>
+<h2 id="das-cuda-memory-model"><strong>Das CUDA Memory Model</strong></h2>
+<p>Speicherhierarchien:</p>
+<ul>
+<li><strong>local memory &amp; registers (thread)</strong></li>
+<li><strong>shared memory (thread block)</strong></li>
+<li>distributed shared memory (thread block clusters)
+(NVIDIA Hopper Architektur)</li>
+<li><strong>global memory (shared between all gpu kernels)</strong></li>
+</ul>
+<hr>
+<p><img src="image-3.png" alt="width:600 bg right">
+<strong>NVIDIA Hopper Architecture</strong>
+Thread Block Clusters als neue Abstraktionsebene</p>
+<ul>
+<li>Einführung von DSMEM innerhalb von Thread Block Clustern</li>
+</ul>
+<hr>
+<h2 id="local--vs-shared--vs-global-memory">Local- vs Shared- vs Global-Memory</h2>
+<table>
+<thead>
+<tr>
+<th>Memory Type</th>
+<th>Location</th>
+<th>Cached</th>
+<th>Access</th>
+<th>Scope</th>
+<th>Lifetime</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Register</td>
+<td>On-chip</td>
+<td>n/a</td>
+<td>R/W</td>
+<td>1 thread</td>
+<td>Thread</td>
+</tr>
+<tr>
+<td>Local</td>
+<td>Off-chip</td>
+<td>Yes*</td>
+<td>R/W</td>
+<td>1 thread</td>
+<td>Thread</td>
+</tr>
+<tr>
+<td>Shared</td>
+<td>On-chip</td>
+<td>n/a</td>
+<td>R/W</td>
+<td>All threads in block</td>
+<td>Block</td>
+</tr>
+<tr>
+<td>Global</td>
+<td>Off-chip</td>
+<td>*</td>
+<td>R/W</td>
+<td>All threads + host</td>
+<td>Host allocation</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Implementierung Abhängig von CC</li>
+</ul>
+<hr>
+<h2 id="local--vs-shared--vs-global-memory">Local- vs Shared- vs Global-Memory</h2>
+<p>Speicherzugriffszeit:</p>
+<ul>
+<li>registers (wenige Taktzyklen)</li>
+<li>shared memory (einige dutzend Taktzyklen)</li>
+<li>global memory (einige hundert Taktzyklen, bei Cache Miss)</li>
+<li>local memory (einige hundert Taktzyklen, bei Cache Miss)</li>
+</ul>
+<hr>
+<h2 id="besondere-speicherbereiche">Besondere Speicherbereiche</h2>
+<ul>
+<li>Zero Copy Memory</li>
+<li>Constant Memory</li>
+<li>Texture Memory</li>
+</ul>
+<hr>
+<p><strong>Zero Copy Memory</strong></p>
+<ul>
+<li>Liegt im Host Speicher</li>
+<li>Ist sowohl von GPU als auch CPU addressierbar</li>
+<li>Vermeidung von Overhead durch das kopieren vieler (kleiner) Daten</li>
+</ul>
+<p>Zugriff langsamer als Device Speicher (über PCIe für externe GPU)</p>
+<pre class="hljs"><code><div>cudaHostAlloc((<span class="hljs-keyword">void</span>**)&amp;hostPtr, <span class="hljs-built_in">size</span>, cudaHostAllocMapped);
+cudaHostGetDevicePointer(&amp;devicePtr, hostPtr, <span class="hljs-number">0</span>);
+
+myKernel&lt;&lt;&lt;blocks, threads&gt;&gt;&gt;(devicePtr);
+</div></code></pre>
+<hr>
+<p><strong>Constant Memory</strong></p>
+<ul>
+<li>Liegt im globalen Speicher</li>
+<li>Zugriffe werden durch Constant-Cache beschleunigt</li>
+</ul>
+<p>Speicher für konst. Daten welche von vielen Threads gelesen werden.</p>
+<pre class="hljs"><code><div>__constant__ <span class="hljs-keyword">float</span> constData[<span class="hljs-number">256</span>];
+
+<span class="hljs-function">__global__ <span class="hljs-keyword">void</span> <span class="hljs-title">myKernel</span><span class="hljs-params">(<span class="hljs-keyword">float</span> *data)</span> </span>{
+    <span class="hljs-keyword">int</span> i = threadIdx.x;
+    <span class="hljs-keyword">float</span> val = constData[i];
+}
+<span class="hljs-comment">// Kopieren von Daten in den Constant Memory</span>
+cudaMemcpyToSymbol(constData, hostData, <span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">float</span>) * <span class="hljs-number">256</span>);
+</div></code></pre>
+<hr>
+<p><strong>Texture Memory</strong></p>
+<ul>
+<li>Nutzt Texture Cache, optimiert für räumlich lokale Speicherzugriffe</li>
+<li>Hardware unterstützte Interpolation</li>
+</ul>
+<p>Häufig eingesetzt in der Bildverarbeitung</p>
+<pre class="hljs"><code><div>texture&lt;<span class="hljs-keyword">float</span>, cudaTextureType1D, cudaReadModeElementType&gt; texRef;
+
+<span class="hljs-function">__global__ <span class="hljs-keyword">void</span> <span class="hljs-title">myKernel</span><span class="hljs-params">(<span class="hljs-keyword">float</span> *output, <span class="hljs-keyword">int</span> <span class="hljs-built_in">size</span>)</span> </span>{
+    <span class="hljs-keyword">int</span> i = threadIdx.x;
+            output[i] = tex1Dfetch(texRef, i);
+}
+<span class="hljs-comment">// Binden des globalen Speichers an den Texture Reference</span>
+cudaBindTexture(<span class="hljs-literal">NULL</span>, texRef, deviceData, <span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">float</span>) * <span class="hljs-built_in">size</span>);
+</div></code></pre>
+<hr>
+<h2 id="tiling"><strong>Tiling</strong></h2>
+<p>Prinzip aus der Computergrafik</p>
+<ul>
+<li>Aufteilung größerer Datenmenge in kleinere unabhängig zu bearbeitende Datensätze</li>
+</ul>
+<p>In unserem Fall:</p>
+<ul>
+<li>Aufteilung größerer Datenmengen in Tiles</li>
+<li>Effiziente Nutzung des Shared Memory Tiles werden in Shared Memory geladen</li>
+<li>Verringerung der Zugriffe auf den global memory</li>
+</ul>
+<hr>
+<p><strong>Performance Optimierung mit Tiling</strong></p>
+<ul>
+<li>Im Folgenden Laden der Daten aus dem globalen Speicher in den shared memory</li>
+<li>Synchronisierung aller threads mittels <code>__syncthreads()</code> um Fehlerhafte berechnungen zu vermeiden</li>
+<li>Verwendung des Shared Memory anstelle des globalen Speichers</li>
+</ul>
+<hr>
+<p><strong>Matrixmultiplikation: Mit Tiling</strong></p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">"cuda_runtime.h"</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">"device_launch_parameters.h"</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">"time.h"</span></span>
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> TILE_DIM 16; <span class="hljs-comment">// Tile Dimension (16 * 16 = 256) Optimale Blockgröße</span></span>
+
+<span class="hljs-function">__device__ <span class="hljs-keyword">float</span> <span class="hljs-title">multiply</span><span class="hljs-params">(<span class="hljs-keyword">float</span> a, <span class="hljs-keyword">float</span> b)</span> </span>{ <span class="hljs-keyword">return</span> a * b; }
+
+<span class="hljs-function">__global__ <span class="hljs-keyword">void</span> <span class="hljs-title">mat_mul</span><span class="hljs-params">(<span class="hljs-keyword">float</span> *matA, <span class="hljs-keyword">float</span> *matB, <span class="hljs-keyword">float</span> *res, <span class="hljs-keyword">int</span> <span class="hljs-built_in">size</span>)</span> </span>{
+    __shared__ <span class="hljs-keyword">float</span> aTile[TILE_DIM][TILE_DIM], bTile[TILE_DIM][TILE_DIM];
+    <span class="hljs-keyword">int</span> row = blockIdx.y * blockDim.y + threadIdx.y;
+    <span class="hljs-keyword">int</span> col = blockIdx.x * blockDim.x + threadIdx.x;
+
+    <span class="hljs-keyword">if</span> (row &lt; <span class="hljs-built_in">size</span> &amp;&amp; col &lt; <span class="hljs-built_in">size</span>) {
+         <span class="hljs-keyword">float</span> sum = <span class="hljs-number">0.0</span>;
+        aTile[threadIdx.y][threadIdx.x] = matA[row*TILE_DIM+threadIdx.x]; <span class="hljs-comment">// Laden der globalen Daten in die Tiles</span>
+        bTile[threadIdx.y][threadIdx.x] = matB[threadIdx.y*N+col];
+        __syncthreads(); <span class="hljs-comment">// Wichtig! Synchronisierung nach Speicheroperationen!</span>
+
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; TILE_DIM; i++) {
+            sum += multiply(aTile[threadIdx.y][i], bTile[i][threadIdx.x]);
+        }
+        
+        res[row * N + col] = sum;
+    }
+}
+
+<span class="hljs-comment">// fill Matrix unverändert</span>
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">fillMatrix</span><span class="hljs-params">(<span class="hljs-keyword">float</span> *matrix, <span class="hljs-keyword">int</span> <span class="hljs-built_in">width</span>, <span class="hljs-keyword">int</span> <span class="hljs-built_in">height</span>)</span> </span>{...}
+</div></code></pre>
+<hr>
+<p><strong>Matrixmultiplaktion: Mit Tiling</strong></p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span> </span>{
+    <span class="hljs-keyword">int</span> matSize = <span class="hljs-number">1024</span>; <span class="hljs-comment">// Neue größe Teilbar durch 32 - vermeidung von überprüfung im Kernel</span>
+    <span class="hljs-keyword">int</span> matSizeBytes = matSize * matSize * <span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">float</span>);
+
+    srand(time(<span class="hljs-literal">NULL</span>));
+
+    <span class="hljs-keyword">float</span> *h_matA, *h_matB, *h_res, *d_matA, *d_matB, *d_res;
+   
+    h_matA = (<span class="hljs-keyword">float</span> *)<span class="hljs-built_in">malloc</span>(matSizeBytes);
+    h_matB = (<span class="hljs-keyword">float</span> *)<span class="hljs-built_in">malloc</span>(matSizeBytes);
+    h_res = (<span class="hljs-keyword">float</span> *)<span class="hljs-built_in">malloc</span>(matSizeBytes);    
+    
+    <span class="hljs-keyword">if</span> (h_matA == <span class="hljs-literal">NULL</span> || h_matB == <span class="hljs-literal">NULL</span> || h_res == <span class="hljs-literal">NULL</span>) { <span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">"Speicherzuweisung fehlgeschlagen.\n"</span>);
+        <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+    }
+    fillMatrix(h_matA, matSize, matSize);
+    fillMatrix(h_matB, matSize, matSize);
+
+    cudaMalloc((<span class="hljs-keyword">void</span>**)&amp;d_matA, matSizeBytes); <span class="hljs-comment">// Speicherallokation auf dem Device</span>
+    cudaMalloc((<span class="hljs-keyword">void</span>**)&amp;d_matB, matSizeBytes);
+    cudaMalloc((<span class="hljs-keyword">void</span>**)&amp;d_res, matSizeBytes);
+    ...
+</div></code></pre>
+<hr>
+<p><strong>Matrixmultiplikation: Mit Tiling</strong></p>
+<pre class="hljs"><code><div>    ...
+    cudaMemcpy(d_matA, h_matA, matSizeByte, cudaMemcpyHostToDevice); <span class="hljs-comment">// Von Host zu Device</span>
+    cudaMemcpy(d_matB, h_matB, matSizeByte, cudaMemcpyHostToDevice);
+
+    <span class="hljs-function">dim3 <span class="hljs-title">blockSize</span><span class="hljs-params">(TILE_DIM,TILE_DIM)</span></span>;
+    <span class="hljs-function">dim3 <span class="hljs-title">gridSize</span><span class="hljs-params">((matSize + blockSize.x<span class="hljs-number">-1</span>)/blockSize.x, (matSize + blockSize.y<span class="hljs-number">-1</span>)/blockSize.y)</span></span>;
+
+    mat_mul &lt;&lt;&lt;gridSize, blockSize&gt;&gt;&gt;(d_matA, d_matB, d_res, matSize);
+
+    <span class="hljs-keyword">cuda_t</span> status = cudaGetLastError();
+
+    <span class="hljs-keyword">if</span> (status != cudaSuccess) {
+        <span class="hljs-keyword">return</span> <span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">"Kernel Launch failed: %s\n"</span>, cudaGetErrorString(status));
+    }
+
+    cudaDeviceSynchronize();
+    cudaMemcpy(h_res, d_res, matSizeByte, cudaMemcpyDeviceToHost); <span class="hljs-comment">// Von Device zu Host</span>
+    cudaFree(d_matA); cudaFree(d_matB); cudaFree(d_res); <span class="hljs-comment">// Speicherfreigabe Device</span>
+    <span class="hljs-built_in">free</span>(h_matA); <span class="hljs-built_in">free</span>(h_matB); <span class="hljs-built_in">free</span>(h_res); <span class="hljs-comment">// Speicherfreigabe Host</span>
+    cudaDeviceReset();
+}
+</div></code></pre>
+<hr>
+<h2 id="best-practices"><strong>Best Practices</strong></h2>
+<ol>
+<li>Vermeidung von <strong>Warp Divergenz</strong> ***</li>
+<li><strong>Profiling</strong> der Anwendung zum Aufspüren von Bottlenecks &amp; Hotspots ***</li>
+<li>Auslagern schwer zu parallelisierenden Codes auf den Host ***</li>
+<li>Vermeidung von unnötigen <strong>Datentransfers</strong> zwischen Host und Device ***</li>
+<li>Verwendung von <strong>Shared Memory</strong> um unnötige Zugriffe auf Global Memory zu vermeiden**</li>
+</ol>
+<hr>
+<h2 id="performancevergleich-cpu-vs-gpu"><strong>Performancevergleich CPU vs. GPU</strong></h2>
+<hr>
+<p><strong>Bilderverzeichnis</strong></p>
+<p>Grid
+https://docs.nvidia.com/cuda/cuda-c-programming-guide/_images/grid-of-thread-blocks.png
+nvprov
+https://face2ai.com/CUDA-F-2-2-%E6%A0%B8%E5%87%BD%E6%95%B0%E8%AE%A1%E6%97%B6/
+Speicherhierarchie
+https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#memory-hierarchy
+Best Practices</p>
+<hr>
+<p><strong>Quellenverzeichnis</strong></p>
+<p>Threadorganization
+https://docs.nvidia.com/cuda/cuda-c-programming-guide/
+SIMT vs SIMD
+https://yosefk.com/blog/simd-simt-smt-parallelism-in-nvidia-gpus.html
+Speicherhierarchie
+https://resources.nvidia.com/en-us-tensor-core/gtc22-whitepaper-hopper
+https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html
+Tiling
+https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html</p>
+<hr>
+<p><strong>Quellenverzeichnis</strong></p>
+
+</body>
+</html>
