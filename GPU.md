@@ -6,10 +6,105 @@ paginate: true
 backgroundColor: #fff
 backgroundImage: url('https://marp.app/assets/hero-background.svg')
 author: André Königer
+---
+# GPU
+---
+# &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Inhaltsverzeichnis**
+##### &nbsp;&nbsp; 1. CPU vs. GPU: Vergleich
+##### &nbsp;&nbsp;&nbsp;2. GPU-Beschleunigung und ihre Anwendung
+##### &nbsp;&nbsp;&nbsp;3. GPU-APIs
+##### &nbsp;&nbsp;&nbsp;4. CUDA - Einführung
+##### &nbsp;&nbsp;&nbsp;5. Case Study und Performance Vergleich CPU & GPU 
+##### &nbsp;&nbsp;&nbsp;6. Ausblick und Trends
+
+
+---
+# <br><br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CPU vs. GPU: Vergleich
+---
+## **CPU (Central Processing Unit)**
+- **Aufgaben:**
+  - Durchführung von Berechnungen für vielfältige Anwendungen.
+  - Ausführung komplexer, aber nicht parallelisierbarer Aufgaben.
+  - Koordination von Systemressourcen.
+
+- **Anwendungsgebiete**
+  - Vielseitige Aufgaben in Softwareanwendungen.
+  - Betriebssysteme.
+  - Datenbankmanagement. 
+---
+## **GPU (Graphics Processing Unit)**
+
+- **Aufgaben**
+  - Optimierung von Grafiken für visuelle Darstellung.
+  - Parallele Verarbeitung großer Datensätze.
+
+- **Anwendungsgebiete**
+  - Grafikdesign (schnelle Verarbeitung von grafischen Elementen).
+  - Simulationen (realistische Darstellung komplexer Szenarien).
+  - Künstliche Intelligenz (z. B. Deep Learning).
+---
+## **CPU vs. GPU: Hardware-Unterschiede**
+- **Speicher**
+  - CPU: Nutzt den Hauptspeicher (RAM)
+  - GPU: Nutzt dedizierten Video-RAM (VRAM)
+- **Kerne**
+  - CPU: Wenige leistungsstarke Kerne (typischerweise 4-16 Kerne)
+  - GPU: Zahlreiche spezialisierte Kerne (Hunderte bis Tausende)
+- **Cache**
+  - CPU: Größer, für schnellen Zugriff auf allgemeine Daten.
+  - GPU: Kleiner, für schnellen Zugriff auf grafikbezogene Daten.
+---
+# <br><br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GPU-APIs
+---
+# **Eine Übersicht**
+![bg right](apis.png)
+- #### CUDA 
+
+- #### OpenCL
+
+- #### ROCm
+
+- #### OpenGL
+
+- #### Vulkan
+
+- #### Metal
+
+- #### SYCL
+---
+# **CUDA**
+
+- #### Erscheinungsdatum
+
+  - **Erstveröffentlichung:** CUDA wurde erstmals im Juni 2007 eingeführt.
+  
+  - **Aktuelle Version:** 12.2 (Stand: 28. Juni 2023)
+
+- #### CUDA Compute Capability
+
+  - **Definition:** CUDA Compute Capability bezieht sich auf die Hardware-Generation von NVIDIA GPUs, die CUDA unterstützt.
+
+  - **Aktuellste:** NVIDIA H100	9.0 (Hopper Architektur)
+---
+# **CUDA**
+
+- #### Marktposition
+
+  - **Dominanz im HPC-Sektor**
+
+  - **Innovation in wissenschaftlichen Anwendungen**
+  
+  - **Starke Präsenz in der KI-Forschung und -Entwicklung**
+  
+  - **Bevorzugte Plattform für komplexe KI-Modelle und Deep Learning**
 
 ---
 
-# CUDA
+# **Einführung in die Programmierung mit CUDA**
+
+<br>
+
+### Am Beispiel von Matrixmultiplikation
 
 ---
 
@@ -191,7 +286,7 @@ $$\#threads = 1024 * (2^{31}-1) * 65535 * 65535 = 2.305.843.008.139.952.128$$
 
 ```c++
 // Launch Konfiguration grid = dim3(48, 1, 1) & block = dim(256, 1, 1)
-int gid = blockIdx.x + threadIdx.x
+int gid = blockIdx.x * blockDim.x + threadIdx.x
 ```
 
 ```c++
@@ -867,6 +962,24 @@ int main(void) {
 ```
 
 ---
+
+**Performance Boost durch Reduktion globaler Speicherzugriffe**
+
+Im Falle von Tiling: $2 \cdot size * size$
+```c++
+aTile[threadIdx.y][threadIdx.x] = matA[row*TILE_DIM+threadIdx.x]; // Laden der globalen Daten in die Tiles
+bTile[threadIdx.y][threadIdx.x] = matB[threadIdx.y*TILE_DIM+col];
+```
+
+Ohne Tiling: $2 * size * size * size$
+```c++
+for (int k = 0; k < size; k++) {
+    sum += multiply(matA[row * size + k], matB[k * size + col]);
+}
+```
+Für *16384x16384* ~900.000.000.000 mehr globale Speicherzugriffe
+
+---
 ## **Best Practices**
 
 1. Vermeidung von **Warp Divergenz** ***
@@ -877,9 +990,100 @@ int main(void) {
 
 ---
 
-## **Performancevergleich CPU vs. GPU**
+**Performance GPU with Tiling**
+
+![height:550](performance-with-tiling.png)
 
 ---
+
+**Performance Vergleich Tiling vs Naive**
+
+![height:550](tiling-vs-naive-total.png)
+
+
+---
+
+**Performancevergleich CPU vs. GPU**
+
+![height:550](cpu-vs-gpu.png)
+
+---
+
+**Performancevergleich CPU vs. GPU**
+
+![height:550](cpu-vs-gpu-small.png)
+
+---
+# <br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GPU-Beschleunigung und ihre
+# &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Anwendungen
+---
+## **GPU-Beschleunigung für Deep Learning**
+- #### Deep Learning
+  - Training komplexer neuronaler Netzwerke.
+  - GPUs beschleunigen durch parallele Berechnungen.
+  - Matrixmultiplikationen profitieren von paralleler GPU-Verarbeitung.
+  ![vertical width:280px](AI.png)
+---
+## **GPU-Beschleunigung für Deep Learning**
+- ##### CuDNN (CUDA Deep Neural Network Library)
+  - NVIDIA's GPU-optimierte Deep Learning-Bibliothek.
+  - Maßgeschneidert für Deep Learning.
+  - Effiziente GPU-Algorithmen, insbesondere für CNNs.
+  ![vertical width:250px](CuDNN.png)
+---
+## **GPU-Beschleunigung für Deep Learning**
+- #### PyTorch
+  - Flexibles und dynamisches Deep Learning-Framework.
+  - Nutzt GPU-Beschleunigung für effizientes Training von neuronalen Netzwerken.
+  - Insbesondere in der Forschung weit verbreitet.
+![vertical width:380px](pytorch.png)
+---
+## **GPU-Beschleunigung für Deep Learning**
+- #### Tensorflow
+  - Open-Source-Framework für maschinelles Lernen.
+  - Integrierte GPU-Unterstützung für effizientes Training.
+  - Branchenführer für industrielle Anwendungen.
+![vertical width:200px](tensorflow.png)
+---
+##  **GPU Beschleunigung für NLP**
+- #### Sequenzielle Modelle
+  - GPU-Beschleunigung von Transformer-Modellen für maschinelles Übersetzen und Sprachmodellierung.
+
+- #### Textverarbeitung
+  - Beschleunigung von NLP-Aufgaben wie Tokenisierung.
+![vertical width:400px](nlp.png)
+---
+##  **GPU Beschleunigung für Crypto-Mining**
+- **Mining**
+  - Mining ist der Prozess, bei dem Transaktionen verifiziert und zur Blockchain hinzugefügt werden.
+
+- **Effizienzsteigerung**
+  - GPU-Einsatz verbessert die Energieeffizienz im Vergleich zu herkömmlichen Methoden.
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;![vertical width:200px](bitcoin.png)
+---
+---
+# <br><br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ausblick und Trends
+---
+## **GPU-Architekturen der Zukunft**
+- **Innovative Fortschritte**
+  - Neue Technologien wie Tensor Cores und Ray Tracing, verspricht Leistungssteigerung.
+
+- **Optimierung für Machine Learning**
+  - Tensor Cores ermöglichen optimierte Berechnungen, was zu schnellerem und effizienterem Machine Learning führt.
+
+- **Grafikanwendungen und Realismus**
+  - Ray Tracing verbessert die Grafikdarstellung für realistischere visuelle Erlebnisse.
+---
+## **Neue Anwendungsfelder**
+- **Medizin**
+  - In der medizinischen Bildgebung für schnellere Diagnosen und komplexe Bildverarbeitung.
+
+- **Finanztechnologie**
+  - Einsatz in der Finanzbranche für Analysen, Risikobewertungen und Algorithmen im Hochfrequenzhandel.
+
+- **Robotik**
+  - GPU-Einsatz in der Robotik für Sensordatenverarbeitung und komplexe Steuerungsalgorithmen.
 
 **Bilderverzeichnis**
 
