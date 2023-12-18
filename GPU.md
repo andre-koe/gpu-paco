@@ -5,7 +5,6 @@ _class: lead
 paginate: true
 backgroundColor: #fff
 backgroundImage: url('https://marp.app/assets/hero-background.svg')
-author: André Königer
 ---
 # GPU
 ---
@@ -100,7 +99,7 @@ author: André Königer
 
 ---
 
-# <br><br>Einführung in die Programmierung mit CUDA
+# <br><br>**Einführung in die Programmierung mit CUDA**
 #### Am Beispiel von Matrixmultiplikation
 
 ---
@@ -234,28 +233,25 @@ Ausgabe: 32 * 48 = 1536 mal Hello CUDA
 
 
 ---
-## **Thread Organization**
+## **Thread Organisation**
 <br>
 <br>
 
-- Thread Blöcke
+- Blocks
 - Grids
 - Threads 
 ---
-### Thread Block
+
+### Block
+
 Threads werden in **Blöcken** organisiert
 
- ![Alt text](image-1.png)
+- Ein Block läuft auf genau einem (SM).
+- Hat eine BlockID (blockIdx.x, blockIdx.y, blockIdx.z)
+- Hat eine BlockDim (blockDim.x, blockDim.y, blockDim.y)
+- Wird in **Warps** unterteilt
 
  Für jeden Block gilt: $X \times Y\times Z \leq 1024$ (bzw. 512 abhängig von CC)
-
----
-
-### Thread Block
-
-- Jeder Streaming Multiprozessor (SM) führt mindestens einen Block aus.
-- Hat eine BlockID (blockIdx.x, blockIdx.y, blockIdx.z)
-- Wird in **Warps** unterteilt
 
 ---
 
@@ -275,11 +271,11 @@ $$\#threads = 1024 * (2^{31}-1) * 65535 * 65535 = 2.305.843.008.139.952.128$$
 ---
 
 ### Thread
-<br>
 
-**threadId** ist nur innerhalb eines Blocks eindeutig!
+- Hat eine threadId
 
-**gid** - muss separat berechnet werden
+
+**Thread ID** ist nur innerhalb eines Blocks eindeutig
 
 ```c++
 // Launch Konfiguration grid = dim3(48, 1, 1) & block = dim(256, 1, 1)
@@ -295,20 +291,7 @@ int gid = row_offset + block_offset + tid;
 ```
 
 ---
-
-<br>
-
-Abhängig vom Problem benötigen wir keine **gid**
-
-```c++
-// Launch Konfiguration grid = dim(48, 48, 1) & block = dim(128, 128, 1)
-// Für Matrizenberechnung
-int row = blockIdx.y * blockDim.y + threadIdx.y;
-int col = blockIdx.x * blockDim.x + threadIdx.x;
-
-```
----
-**Matrixmultiplaktion**
+**Matrixmultiplaktion: Mit Kernel Launch**
 
 ```c++
 #include "cuda_runtime.h"
@@ -338,6 +321,7 @@ void fillMatrix(float *matrix, int width, int height) {
 ```
 
 ---
+**Matrixmultiplikation: Mit Kernel Launch**
 ```c++
 int main(void) {
     int matSize = 1000;
@@ -391,8 +375,6 @@ int main(void) {
 #include "device_launch_parameters.h"
 #include "time.h"
 
-__device__ float multiply(float a, float b) { return a * b; }
-
 __global__ void mat_mul(float *matA, float *matB, float *res, int size) {
     int row = blockIdx.y * blockDim.y + threadIdx.y;
     int col = blockIdx.x * blockDim.x + threadIdx.x;
@@ -406,8 +388,6 @@ __global__ void mat_mul(float *matA, float *matB, float *res, int size) {
     }
 }
 
-// fill Matrix unverändert
-void fillMatrix(float *matrix, int width, int height) {...}
 
 ```
 
@@ -459,9 +439,8 @@ int main(void) {
 ```
 
 ---
-## **Error Handling**
+##### **Error Handling**
 
-Returntype `cudaError`
 
 ```c++
 cudaError_t status = cudaMalloc((void**)&devicePtr, size);
@@ -469,16 +448,9 @@ if (status != cudaSuccess) {
     fprintf(stderr, "cudaMalloc failed: %s\n", cudaGetErrorString(status));
     // Fehlerbehandlung...
 }
-```
 
----
-### Error Handling
+// Was wenn nichts zurückgegeben wird?
 
-Was wenn der Funktionsaufruf keinen Wert zurückgibt?
-
-`cudaGetLastError()`
-
-```c++
 a_kernel_function<<<grid, blocks>>>(...);
 
 cudaError_t status = cudaGetLastError();
@@ -487,19 +459,10 @@ if (status != cudaSuccess) {
     // Fehlerbehandlung
 }
 ```
----
-## **Abfragen von Hardwareinformationen über cudaDeviceProp**
-
-`cudaDeviceProp properties` & `cudaGetDeviceProperties(&properties, deviceNumber)` 
-
-Informationen:
-- Gerätename
-- #Multiprozessoren
-- Warpsize
-- usw.
 
 ---
-### Beispiel
+#### **Abfragen von Hardwareinformationen über cudaDeviceProp** 
+
 ```c++
 void query_device() {
 	int devNo = 0;     
@@ -534,9 +497,9 @@ Maximale Anzahl von Warps pro Multiprozessor: 48
 ### Die kleinste schedulbare Einheit - Warp
 
 - Jeder Block wird in **Warps** zu je 32 Threads unterteilt.
-- Jeder **Warp** hat eine eindeutige Warp ID
 - Warps werden nach **SIMT** ausgeführt
 - Warps teilen sich **gemeinsamen Speicher** innerhalb eines SM
+- Es werden jeweils immer 4 Warps allokiert
 
 Können einen der folgenden Zustände annehmen:
 
@@ -545,16 +508,16 @@ Können einen der folgenden Zustände annehmen:
 - *stalled* (vgl. blocked)
 
 ---
-### Warp
-![bg right height:600](<Pasted image 20231208220325.png>)
+### Warp & Blocksize
+<br>
 
+![bg left height:500](<Pasted image 20231208220325.png>)
+- 
 
-Ungünstige Blockgröße:
-- verschwendetes Parallelisierungspotential
-- worst case: 2304 Threads
-- best case:
-73.728 Threads
+- Blocksize von 40
+- Gridsize von 2
 
+Insgesamt 50 ungenutzte Threads
 
 ---
 ### Ausführungsmodell SIMT
@@ -562,10 +525,7 @@ Ungünstige Blockgröße:
 Single Instruction Multiple Threads (spezialfall von SIMD)
 - Alle Threads innerhalb eines Warps werden synchron ausgeführt
 
----
-### SIMT vs SIMD
-
-SIMT bietet höhere Flexibilität auf Kosten der Performance
+**SIMT** bedeutet ...
 
 - **Single instruction, multiple register sets**
 - **Single instruction, multiple addresses**
@@ -596,14 +556,6 @@ __global__ void this_causes_warp_divergence() {
 Divergierende Pfade werden seriell ausgeführt.
 
 **Performanceverlust: 50%**
-
----
-
-### Warp Divergence
-
-**Metrik** für Warp Divergence ist die **branch efficiency**
-
-$\text{Branch Efficiency} = 100\% \times \frac{\#\text{Branches}- \#\text{Divergent\ Branches}}{\text{\#Branches}}$
 
 ---
 
@@ -659,14 +611,8 @@ __global__ void modifyArray(int *data, int n) {
 
 ### **Profiling Tools** 
 
-**Nsight Compute**
-- UI
-- integrierter Occupancy Calculator
-- verschiedene Metriken
-- viele weitere Funktionen
-
-**nvprof**
-- Commandline Tool für Cuda Capability < 7.5
+- **Nsight Compute**
+- **nvprof** (Commandline Tool für Cuda Capability < 7.5)
 
 
 ---
@@ -681,75 +627,14 @@ __global__ void modifyArray(int *data, int n) {
 ![width:1000 nvidia nvprof cli](nvprof_sudo.png)
 
 ---
-**Matrixmultiplikation: Anpassung der Blockgröße**
-```c++
-#include "cuda_runtime.h"
-#include "device_launch_parameters.h"
-#include "time.h"
-
-__device__ float multiply(float a, float b) { return a * b; }
-
-__global__ void mat_mul(float *matA, float *matB, float *res, int size) {
-    int row = blockIdx.y * blockDim.y + threadIdx.y;
-    int col = blockIdx.x * blockDim.x + threadIdx.x;
-
-    if (row < size && col < size) {
-         float sum = 0.0;
-        for (int i = 0; i < size; i++) {
-            sum += multiply(matA[row * size + i], matB[i * size + col]);
-        }
-        
-        res[row * size + col] = sum;
-    }
-}
-
-// fill Matrix unverändert
-void fillMatrix(float *matrix, int width, int height) {...}
-```
----
  **Matrixmultiplikation: Anpassung der Blockgröße**
 ```c++
 int main(void) {
     int matSize = 1024; // Neue größe Teilbar durch 32 - vermeidung von überprüfung im Kernel
-    int matSizeBytes = matSize * matSize * sizeof(float);
-
-    srand(time(NULL));
-
-    float *h_matA, *h_matB, *h_res, *d_matA, *d_matB, *d_res;
-   
-    h_matA = (float *)malloc(matSizeBytes);
-    h_matB = (float *)malloc(matSizeBytes);
-    h_res = (float *)malloc(matSizeBytes);    
-    
-    if (h_matA == NULL || h_matB == NULL || h_res == NULL) { fprintf(stderr, "Speicherzuweisung fehlgeschlagen.\n");
-        return 1;
-    }
-    fillMatrix(h_matA, matSize, matSize);
-    fillMatrix(h_matB, matSize, matSize);
-
-    cudaMalloc((void**)&d_matA, matSizeBytes); // Speicherallokation auf dem Device
-    cudaMalloc((void**)&d_matB, matSizeBytes);
-    cudaMalloc((void**)&d_res, matSizeBytes);
     //...
-```
----
-**Matrixmultiplikation: Anpassung der Bockgröße**
-```c++
-    //...
-    cudaMemcpy(d_matA, h_matA, matSizeBytes, cudaMemcpyHostToDevice); // Von Host zu Device
-    cudaMemcpy(d_matB, h_matB, matSizeBytes, cudaMemcpyHostToDevice);
-
     dim3 blockSize(16,16); // 16 * 16 = 256 % 32 == 0
     dim3 gridSize((matSize + blockSize.x-1)/blockSize.x, (matSize + blockSize.y-1)/blockSize.y);
-
-    mat_mul <<<gridSize, blockSize>>>(d_matA, d_matB, d_res, matSize);
-
-    cudaDeviceSynchronize();
-    cudaMemcpy(h_res, d_res, matSizeBytes, cudaMemcpyDeviceToHost); // Von Device zu Host
-    cudaFree(d_matA); cudaFree(d_matB); cudaFree(d_res); // Speicherfreigabe Device
-    free(h_matA); free(h_matB); free(h_res); // Speicherfreigabe Host
-    cudaDeviceReset();
-}
+    //...
 ```
 
 ---
@@ -774,11 +659,12 @@ Thread Block Clusters als neue Abstraktionsebene
 | Memory Type | Location | Cached | Access | Scope                  | Lifetime       |
 |-------------|----------|--------|--------|------------------------|----------------|
 | Register    | On-chip  | n/a    | R/W    | 1 thread               | Thread         |
-| Local       | Off-chip | Yes*   | R/W    | 1 thread               | Thread         |
+| Local       | Off-chip | Yes*   | R/W    | 1 thread       | Thread         |
 | Shared      | On-chip  | n/a    | R/W    | All threads in block   | Block          |
-| Global      | Off-chip | *      | R/W    | All threads + host     | Host allocation|
+| Global      | Off-chip | Yes*      | R/W    | All threads + host     | Host allocation|
 
-* Implementierung Abhängig von CC
+ \* Implementierung Abhängig von CC
+
 ---
 
 ### Local- vs Shared- vs Global-Memory 
@@ -832,7 +718,6 @@ __global__ void myKernel(float *data) {
 // Kopieren von Daten in den Constant Memory
 cudaMemcpyToSymbol(constData, hostData, sizeof(float) * 256);
 ```
-
 ---
 **Texture Memory**
 
@@ -870,7 +755,6 @@ In unserem Fall:
 - Synchronisierung aller threads mittels `__syncthreads()` um Fehlerhafte berechnungen zu vermeiden
 - Verwendung des Shared Memory anstelle des globalen Speichers
 
-
 ---
 
 **Matrixmultiplikation: Mit Tiling**
@@ -882,7 +766,7 @@ In unserem Fall:
 
 #define TILE_DIM 16; // Tile Dimension (16 * 16 = 256) Optimale Blockgröße
 
-__device__ float multiply(float a, float b) { return a * b; }
+//...
 
 __global__ void mat_mul(float *matA, float *matB, float *res, int size) {
     __shared__ float aTile[TILE_DIM][TILE_DIM], bTile[TILE_DIM][TILE_DIM];
@@ -903,59 +787,14 @@ __global__ void mat_mul(float *matA, float *matB, float *res, int size) {
     }
 }
 
-// fill Matrix unverändert
-void fillMatrix(float *matrix, int width, int height) {...}
-```
----
-**Matrixmultiplaktion: Mit Tiling** 
-```c++
+//...
 int main(void) {
-    int matSize = 1024; // Neue größe Teilbar durch 32 - vermeidung von überprüfung im Kernel
-    int matSizeBytes = matSize * matSize * sizeof(float);
 
-    srand(time(NULL));
-
-    float *h_matA, *h_matB, *h_res, *d_matA, *d_matB, *d_res;
-   
-    h_matA = (float *)malloc(matSizeBytes);
-    h_matB = (float *)malloc(matSizeBytes);
-    h_res = (float *)malloc(matSizeBytes);    
-    
-    if (h_matA == NULL || h_matB == NULL || h_res == NULL) { fprintf(stderr, "Speicherzuweisung fehlgeschlagen.\n");
-        return 1;
-    }
-    fillMatrix(h_matA, matSize, matSize);
-    fillMatrix(h_matB, matSize, matSize);
-
-    cudaMalloc((void**)&d_matA, matSizeBytes); // Speicherallokation auf dem Device
-    cudaMalloc((void**)&d_matB, matSizeBytes);
-    cudaMalloc((void**)&d_res, matSizeBytes);
-    ...
-```
----
-**Matrixmultiplikation: Mit Tiling**
-```c++
-    ...
-    cudaMemcpy(d_matA, h_matA, matSizeByte, cudaMemcpyHostToDevice); // Von Host zu Device
-    cudaMemcpy(d_matB, h_matB, matSizeByte, cudaMemcpyHostToDevice);
-
+    //...
     dim3 blockSize(TILE_DIM,TILE_DIM);
-    dim3 gridSize((matSize + blockSize.x-1)/blockSize.x, (matSize + blockSize.y-1)/blockSize.y);
-
-    mat_mul <<<gridSize, blockSize>>>(d_matA, d_matB, d_res, matSize);
-
-    cudaError_t status = cudaGetLastError();
-
-    if (status != cudaSuccess) {
-        return fprintf(stderr, "Kernel Launch failed: %s\n", cudaGetErrorString(status));
-    }
-
-    cudaDeviceSynchronize();
-    cudaMemcpy(h_res, d_res, matSizeBytes, cudaMemcpyDeviceToHost); // Von Device zu Host
-    cudaFree(d_matA); cudaFree(d_matB); cudaFree(d_res); // Speicherfreigabe Device
-    free(h_matA); free(h_matB); free(h_res); // Speicherfreigabe Host
-    cudaDeviceReset();
+    //...
 }
+
 ```
 
 ---
@@ -1082,32 +921,60 @@ Für *16384x16384* ~900.000.000.000 mehr globale Speicherzugriffe
 - **Robotik**
   - GPU-Einsatz in der Robotik für Sensordatenverarbeitung und komplexe Steuerungsalgorithmen.
 
-**Bilderverzeichnis**
+---
+**Quellenverzeichnis**
 
-Grid
-https://docs.nvidia.com/cuda/cuda-c-programming-guide/_images/grid-of-thread-blocks.png
-nvprov
-https://face2ai.com/CUDA-F-2-2-%E6%A0%B8%E5%87%BD%E6%95%B0%E8%AE%A1%E6%97%B6/
-Speicherhierarchie 
-https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#memory-hierarchy
-Best Practices
-
+    CPU vs. GPU: Vergleich
+    https://ark.intel.com
+    https://www.nvidia.com
+    CPU vs. GPU: Hardware-Unterschiede
+    https://www.anandtech.com
+    GPU-Beschleunigung für Deep Learning
+    https://developer.nvidia.com/deep-learning
+    https://www.tensorflow.org/guide/gpu
+    https://pytorch.org/get-started/locally/
 
 ---
 
-**Quellenverzeichnis**
-
-Threadorganization
-https://docs.nvidia.com/cuda/cuda-c-programming-guide/
-SIMT vs SIMD
-https://yosefk.com/blog/simd-simt-smt-parallelism-in-nvidia-gpus.html
-Speicherhierarchie
-https://resources.nvidia.com/en-us-tensor-core/gtc22-whitepaper-hopper
-https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html
-Tiling
-https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html
+    GPU Beschleunigung für NLP
+    https://www.deepspeed.ai/
+    https://developer.nvidia.com/blog/nlp-architects-guide-to-ai-acceleration-with-tensorcore/
+    GPU Beschleunigung für Crypto-Mining
+    https://en.bitcoin.it/wiki/Mining 
+    https://ethereum.org/
+    GPU-Architekturen der Zukunft
+    https://www.nvidia.com/en-gb/research/
+    Neue Anwendungsfelder
+    https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3496509/
+    https://www.nvidia.com/en-us/industries/finance/ai-trading-brief/
+    https://developer.nvidia.com/blog/cuda-spotlight-gpu-accelerated-guidance-and-control-robotic-systems/
+    Threadorganisation
+    https://docs.nvidia.com/cuda/cuda-c-programming-guide/
+    https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#programming-model
+    SIMT vs SIMD
+    https://yosefk.com/blog/simd-simt-smt-parallelism-in-nvidia-gpus.html
+    https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#simt-architecture
+    Speicherhierarchie
+    https://resources.nvidia.com/en-us-tensor-core/gtc22-whitepaper-hopper
+    https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html
+    Tiling
+    https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html
 
 ---
 
-**Quellenverzeichnis**
+Bildverzeichnis:
+
+    https://bitcoin.org/img/icons/logo-footer.svg?1702235293
+    https://upload.wikimedia.org/wikipedia/commons/2/2d/Tensorflow_logo.svg
+    https://wissenstransfer.innohub13.de/wp-content/uploads/2021/04/wissenstransfer_NLP_TitelIllustration.svg
+    https://bfirst.tech/wp-content/uploads/2022/04/konwolucyjne-sieci.svg
+    https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenCL_logo.svg
+    https://www.nvidia.com/content/dam/en-zz/Solutions/about-nvidia/logo-and-brand/01-nvidia-logo-vert-500x200-2c50-l@2x.png
+    https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/SYCL_logo.svg/1200px-SYCL_logo.svg
+    https://avatars.githubusercontent.com/u/16900649?s=200&v=4
+    https://upload.wikimedia.org/wikipedia/commons/f/fe/Vulkan_logo.svg
+    https://upload.wikimedia.org/wikipedia/commons/c/c6/PyTorch_logo_black.svg
+    https://docs.nvidia.com/cuda/cuda-c-programming-guide/_images/grid-of-thread-blocks.png
+    https://face2ai.com/CUDA-F-2-2-%E6%A0%B8%E5%87%BD%E6%95%B0%E8%AE%A1%E6%97%B6/
+    https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#memory-hierarchy
 

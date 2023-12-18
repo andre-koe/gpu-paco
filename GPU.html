@@ -365,7 +365,156 @@ code {
           : 'default'
     });
   </script>
-<h1 id="cuda">CUDA</h1>
+<h1 id="gpu">GPU</h1>
+<hr>
+<h1 id="inhaltsverzeichnis">                      <strong>Inhaltsverzeichnis</strong></h1>
+<h5 id="1-cpu-vs-gpu-vergleich">   1. CPU vs. GPU: Vergleich</h5>
+<h5 id="2-gpu-beschleunigung-und-ihre-anwendung">   2. GPU-Beschleunigung und ihre Anwendung</h5>
+<h5 id="3-gpu-apis">   3. GPU-APIs</h5>
+<h5 id="4-cuda---einf%C3%BChrung">   4. CUDA - Einführung</h5>
+<h5 id="5-case-study-und-performance-vergleich-cpu--gpu">   5. Case Study und Performance Vergleich CPU &amp; GPU</h5>
+<h5 id="6-ausblick-und-trends">   6. Ausblick und Trends</h5>
+<hr>
+<h1 id="brbrbr-cpu-vs-gpu-vergleich"><br><br><br>                CPU vs. GPU: Vergleich</h1>
+<hr>
+<h2 id="cpu-central-processing-unit"><strong>CPU (Central Processing Unit)</strong></h2>
+<ul>
+<li>
+<p><strong>Aufgaben:</strong></p>
+<ul>
+<li>Durchführung von Berechnungen für vielfältige Anwendungen.</li>
+<li>Ausführung komplexer, aber nicht parallelisierbarer Aufgaben.</li>
+<li>Koordination von Systemressourcen.</li>
+</ul>
+</li>
+<li>
+<p><strong>Anwendungsgebiete</strong></p>
+<ul>
+<li>Vielseitige Aufgaben in Softwareanwendungen.</li>
+<li>Betriebssysteme.</li>
+<li>Datenbankmanagement.</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="gpu-graphics-processing-unit"><strong>GPU (Graphics Processing Unit)</strong></h2>
+<ul>
+<li>
+<p><strong>Aufgaben</strong></p>
+<ul>
+<li>Optimierung von Grafiken für visuelle Darstellung.</li>
+<li>Parallele Verarbeitung großer Datensätze.</li>
+</ul>
+</li>
+<li>
+<p><strong>Anwendungsgebiete</strong></p>
+<ul>
+<li>Grafikdesign (schnelle Verarbeitung von grafischen Elementen).</li>
+<li>Simulationen (realistische Darstellung komplexer Szenarien).</li>
+<li>Künstliche Intelligenz (z. B. Deep Learning).</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="cpu-vs-gpu-hardware-unterschiede"><strong>CPU vs. GPU: Hardware-Unterschiede</strong></h2>
+<ul>
+<li><strong>Speicher</strong>
+<ul>
+<li>CPU: Nutzt den Hauptspeicher (RAM)</li>
+<li>GPU: Nutzt dedizierten Video-RAM (VRAM)</li>
+</ul>
+</li>
+<li><strong>Kerne</strong>
+<ul>
+<li>CPU: Wenige leistungsstarke Kerne (typischerweise 4-16 Kerne)</li>
+<li>GPU: Zahlreiche spezialisierte Kerne (Hunderte bis Tausende)</li>
+</ul>
+</li>
+<li><strong>Cache</strong>
+<ul>
+<li>CPU: Größer, für schnellen Zugriff auf allgemeine Daten.</li>
+<li>GPU: Kleiner, für schnellen Zugriff auf grafikbezogene Daten.</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="brbrbr-gpu-apis"><br><br><br>                              GPU-APIs</h1>
+<hr>
+<h1 id="eine-%C3%BCbersicht"><strong>Eine Übersicht</strong></h1>
+<p><img src="apis.png" alt="bg right"></p>
+<ul>
+<li>
+<h4 id="cuda">CUDA</h4>
+</li>
+<li>
+<h4 id="opencl">OpenCL</h4>
+</li>
+<li>
+<h4 id="rocm">ROCm</h4>
+</li>
+<li>
+<h4 id="opengl">OpenGL</h4>
+</li>
+<li>
+<h4 id="vulkan">Vulkan</h4>
+</li>
+<li>
+<h4 id="metal">Metal</h4>
+</li>
+<li>
+<h4 id="sycl">SYCL</h4>
+</li>
+</ul>
+<hr>
+<h1 id="cuda"><strong>CUDA</strong></h1>
+<ul>
+<li>
+<h4 id="erscheinungsdatum">Erscheinungsdatum</h4>
+<ul>
+<li>
+<p><strong>Erstveröffentlichung:</strong> CUDA wurde erstmals im Juni 2007 eingeführt.</p>
+</li>
+<li>
+<p><strong>Aktuelle Version:</strong> 12.2 (Stand: 28. Juni 2023)</p>
+</li>
+</ul>
+</li>
+<li>
+<h4 id="cuda-compute-capability">CUDA Compute Capability</h4>
+<ul>
+<li>
+<p><strong>Definition:</strong> CUDA Compute Capability bezieht sich auf die Hardware-Generation von NVIDIA GPUs, die CUDA unterstützt.</p>
+</li>
+<li>
+<p><strong>Aktuellste:</strong> NVIDIA H100	9.0 (Hopper Architektur)</p>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="cuda"><strong>CUDA</strong></h1>
+<ul>
+<li>
+<h4 id="marktposition">Marktposition</h4>
+<ul>
+<li>
+<p><strong>Dominanz im HPC-Sektor</strong></p>
+</li>
+<li>
+<p><strong>Innovation in wissenschaftlichen Anwendungen</strong></p>
+</li>
+<li>
+<p><strong>Starke Präsenz in der KI-Forschung und -Entwicklung</strong></p>
+</li>
+<li>
+<p><strong>Bevorzugte Plattform für komplexe KI-Modelle und Deep Learning</strong></p>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="brbreinf%C3%BChrung-in-die-programmierung-mit-cuda"><br><br>Einführung in die Programmierung mit CUDA</h1>
+<h4 id="am-beispiel-von-matrixmultiplikation">Am Beispiel von Matrixmultiplikation</h4>
 <hr>
 <p><strong>Hello CUDA</strong></p>
 <pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">"cuda_runtime.h"</span></span>
@@ -485,7 +634,7 @@ hello_cuda &lt;&lt;&lt;grid, block&gt;&gt;&gt;();
 <h3 id="thread-block">Thread Block</h3>
 <p>Threads werden in <strong>Blöcken</strong> organisiert</p>
 <p><img src="image-1.png" alt="Alt text"></p>
-<p>Für jeden Block gilt: $X \times Y\times Z \leq 1024$ (bzw. 512 für CC $\geq$ )</p>
+<p>Für jeden Block gilt: $X \times Y\times Z \leq 1024$ (bzw. 512 abhängig von CC)</p>
 <hr>
 <h3 id="thread-block">Thread Block</h3>
 <ul>
@@ -507,9 +656,10 @@ hello_cuda &lt;&lt;&lt;grid, block&gt;&gt;&gt;();
 <hr>
 <h3 id="thread">Thread</h3>
 <br>
-<p><strong>threadId</strong> ist nur innerhalb eines blocks eindeutig!</p>
+<p><strong>threadId</strong> ist nur innerhalb eines Blocks eindeutig!</p>
+<p><strong>gid</strong> - muss separat berechnet werden</p>
 <pre class="hljs"><code><div><span class="hljs-comment">// Launch Konfiguration grid = dim3(48, 1, 1) &amp; block = dim(256, 1, 1)</span>
-<span class="hljs-keyword">int</span> gid = blockIdx.x + threadIdx.x
+<span class="hljs-keyword">int</span> gid = blockIdx.x * blockDim.x + threadIdx.x
 </div></code></pre>
 <pre class="hljs"><code><div><span class="hljs-comment">// Launch Konfiguration grid = dim3(48, 48, 1) &amp; block = dim(256, 1, 1)</span>
 <span class="hljs-keyword">int</span> tid = threadIdx.x;
@@ -643,13 +793,13 @@ hello_cuda &lt;&lt;&lt;grid, block&gt;&gt;&gt;();
     cudaMalloc((<span class="hljs-keyword">void</span>**)&amp;d_matA, matSizeBytes); <span class="hljs-comment">// Speicherallokation auf dem Device</span>
     cudaMalloc((<span class="hljs-keyword">void</span>**)&amp;d_matB, matSizeBytes);
     cudaMalloc((<span class="hljs-keyword">void</span>**)&amp;d_res, matSizeBytes);
-    ...
+    <span class="hljs-comment">//...</span>
 </div></code></pre>
 <hr>
 <p><strong>Matrixmultiplikation: mit Datenübertragung</strong></p>
-<pre class="hljs"><code><div>    ...
-    cudaMemcpy(d_matA, h_matA, matSizeByte, cudaMemcpyHostToDevice); <span class="hljs-comment">// Von Host zu Device</span>
-    cudaMemcpy(d_matB, h_matB, matSizeByte, cudaMemcpyHostToDevice);
+<pre class="hljs"><code><div>    <span class="hljs-comment">//...</span>
+    cudaMemcpy(d_matA, h_matA, matSizeBytes, cudaMemcpyHostToDevice); <span class="hljs-comment">// Von Host zu Device</span>
+    cudaMemcpy(d_matB, h_matB, matSizeBytes, cudaMemcpyHostToDevice);
 
     <span class="hljs-function">dim3 <span class="hljs-title">blockSize</span><span class="hljs-params">(<span class="hljs-number">10</span>,<span class="hljs-number">10</span>)</span></span>;
     <span class="hljs-function">dim3 <span class="hljs-title">gridSize</span><span class="hljs-params">((matSize + blockSize.x<span class="hljs-number">-1</span>)/blockSize.x, (matSize + blockSize.y<span class="hljs-number">-1</span>)/blockSize.y)</span></span>;
@@ -657,7 +807,7 @@ hello_cuda &lt;&lt;&lt;grid, block&gt;&gt;&gt;();
     mat_mul &lt;&lt;&lt;gridSize, blockSize&gt;&gt;&gt;(d_matA, d_matB, d_res, matSize);
 
     cudaDeviceSynchronize();
-    cudaMemcpy(h_res, d_res, matSizeByte, cudaMemcpyDeviceToHost); <span class="hljs-comment">// Von Device zu Host</span>
+    cudaMemcpy(h_res, d_res, matSizeBytes, cudaMemcpyDeviceToHost); <span class="hljs-comment">// Von Device zu Host</span>
     cudaFree(d_matA); cudaFree(d_matB); cudaFree(d_res); <span class="hljs-comment">// Speicherfreigabe Device</span>
     <span class="hljs-built_in">free</span>(h_matA); <span class="hljs-built_in">free</span>(h_matB); <span class="hljs-built_in">free</span>(h_res); <span class="hljs-comment">// Speicherfreigabe Host</span>
     cudaDeviceReset();
@@ -695,7 +845,7 @@ cudaError_t status = cudaGetLastError();
 <li>usw.</li>
 </ul>
 <hr>
-<h2 id="beispiel">Beispiel</h2>
+<h3 id="beispiel">Beispiel</h3>
 <pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">query_device</span><span class="hljs-params">()</span> </span>{
 	<span class="hljs-keyword">int</span> devNo = <span class="hljs-number">0</span>;     
 	cudaDeviceProp iProp;     
@@ -722,7 +872,7 @@ Maximale Anzahl von Warps pro Multiprozessor: 48
 <li><strong>Schlussfolgerungen</strong></li>
 </ul>
 <hr>
-<h2 id="die-kleinste-schedulbare-einheit---warp">Die kleinste schedulbare Einheit - Warp</h2>
+<h3 id="die-kleinste-schedulbare-einheit---warp">Die kleinste schedulbare Einheit - Warp</h3>
 <ul>
 <li>Jeder Block wird in <strong>Warps</strong> zu je 32 Threads unterteilt.</li>
 <li>Jeder <strong>Warp</strong> hat eine eindeutige Warp ID</li>
@@ -736,7 +886,7 @@ Maximale Anzahl von Warps pro Multiprozessor: 48
 <li><em>stalled</em> (vgl. blocked)</li>
 </ul>
 <hr>
-<h2 id="warp">Warp</h2>
+<h3 id="warp">Warp</h3>
 <p><img src="Pasted image 20231208220325.png" alt="bg right height:600"></p>
 <p>Ungünstige Blockgröße:</p>
 <ul>
@@ -746,13 +896,13 @@ Maximale Anzahl von Warps pro Multiprozessor: 48
 73.728 Threads</li>
 </ul>
 <hr>
-<h2 id="ausf%C3%BChrungsmodell-simt">Ausführungsmodell SIMT</h2>
+<h3 id="ausf%C3%BChrungsmodell-simt">Ausführungsmodell SIMT</h3>
 <p>Single Instruction Multiple Threads (spezialfall von SIMD)</p>
 <ul>
 <li>Alle Threads innerhalb eines Warps werden synchron ausgeführt</li>
 </ul>
 <hr>
-<h2 id="simt-vs-simd">SIMT vs SIMD</h2>
+<h3 id="simt-vs-simd">SIMT vs SIMD</h3>
 <p>SIMT bietet höhere Flexibilität auf Kosten der Performance</p>
 <ul>
 <li><strong>Single instruction, multiple register sets</strong></li>
@@ -760,7 +910,7 @@ Maximale Anzahl von Warps pro Multiprozessor: 48
 <li><strong>Single instruction, multiple flow paths</strong></li>
 </ul>
 <hr>
-<h2 id="warp-divergence">Warp Divergence</h2>
+<h3 id="warp-divergence">Warp Divergence</h3>
 <p>Control flow statements mit divergierenden Pfaden (innerhalb eines Warps).</p>
 <pre class="hljs"><code><div><span class="hljs-function">__global__ <span class="hljs-keyword">void</span> <span class="hljs-title">this_causes_warp_divergence</span><span class="hljs-params">()</span> </span>{
 	<span class="hljs-keyword">int</span> tid = threadIdx.x;
@@ -772,16 +922,16 @@ Maximale Anzahl von Warps pro Multiprozessor: 48
 }
 </div></code></pre>
 <hr>
-<h2 id="warp-divergence">Warp Divergence</h2>
+<h3 id="warp-divergence">Warp Divergence</h3>
 <p><img src="Pasted image 20231209131042.png" alt="bg right height:600"></p>
 <p>Divergierende Pfade werden seriell ausgeführt.</p>
 <p><strong>Performanceverlust: 50%</strong></p>
 <hr>
-<h2 id="warp-divergence">Warp Divergence</h2>
+<h3 id="warp-divergence">Warp Divergence</h3>
 <p><strong>Metrik</strong> für Warp Divergence ist die <strong>branch efficiency</strong></p>
 <p>$\text{Branch Efficiency} = 100% \times \frac{#\text{Branches}- #\text{Divergent\ Branches}}{\text{#Branches}}$</p>
 <hr>
-<h2 id="warp-divergence">Warp Divergence</h2>
+<h3 id="warp-divergence">Warp Divergence</h3>
 <pre class="hljs"><code><div><span class="hljs-function">__global__ <span class="hljs-keyword">void</span> <span class="hljs-title">this_does_not_cause_warp_divergence</span><span class="hljs-params">()</span> </span>{
     <span class="hljs-comment">// Jeder Threadblock hat 64 Threads</span>
     <span class="hljs-keyword">int</span> tid = blockIdx.x * threadIdx.x;
@@ -794,7 +944,7 @@ Maximale Anzahl von Warps pro Multiprozessor: 48
 }
 </div></code></pre>
 <hr>
-<h2 id="warp-synchronisierung">Warp Synchronisierung</h2>
+<h3 id="warp-synchronisierung">Warp Synchronisierung</h3>
 <p>Warps innerhalb eines Blocks nicht notwendigerweise synchron!</p>
 <p>Synchronisierung erfolgt mittels:
 <code>__syncthreads()</code> (vgl. pthread_barrier_wait(...))</p>
@@ -813,7 +963,7 @@ Maximale Anzahl von Warps pro Multiprozessor: 48
     }
 </style>
 <hr>
-<h2 id="schlussfolgerungen">Schlussfolgerungen</h2>
+<h3 id="schlussfolgerungen">Schlussfolgerungen</h3>
 <ul>
 <li>Warps entsprechen Threads in klassischer Programmierung</li>
 <li>Blocksize = $X \times Warpsize$ vermeidet nutzlose Threads</li>
@@ -821,7 +971,7 @@ Maximale Anzahl von Warps pro Multiprozessor: 48
 <li>Warps innerhalb eines Blocks keine synchrone Ausführung</li>
 </ul>
 <hr>
-<h2 id="profiling-tools"><strong>Profiling Tools</strong></h2>
+<h3 id="profiling-tools"><strong>Profiling Tools</strong></h3>
 <p><strong>Nsight Compute</strong></p>
 <ul>
 <li>UI</li>
@@ -834,18 +984,16 @@ Maximale Anzahl von Warps pro Multiprozessor: 48
 <li>Commandline Tool für Cuda Capability &lt; 7.5</li>
 </ul>
 <hr>
-<h2 id="nvidia-nsight-compute">Nvidia Nsight Compute</h2>
+<h3 id="nvidia-nsight-compute">Nvidia Nsight Compute</h3>
 <p><img src="image-2.png" alt="width:800  nvidia nsight compute details"></p>
 <hr>
-<h2 id="nvidia-nvprof">Nvidia nvprof</h2>
+<h3 id="nvidia-nvprof">Nvidia nvprof</h3>
 <p><img src="nvprof_sudo.png" alt="width:1000 nvidia nvprof cli"></p>
 <hr>
 <p><strong>Matrixmultiplikation: Anpassung der Blockgröße</strong></p>
 <pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">"cuda_runtime.h"</span></span>
 <span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">"device_launch_parameters.h"</span></span>
 <span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">"time.h"</span></span>
-
-<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> TILE_DIM 16; <span class="hljs-comment">// Tile Dimension (16 * 16 = 256) Optimale Blockgröße</span></span>
 
 <span class="hljs-function">__device__ <span class="hljs-keyword">float</span> <span class="hljs-title">multiply</span><span class="hljs-params">(<span class="hljs-keyword">float</span> a, <span class="hljs-keyword">float</span> b)</span> </span>{ <span class="hljs-keyword">return</span> a * b; }
 
@@ -855,11 +1003,11 @@ Maximale Anzahl von Warps pro Multiprozessor: 48
 
     <span class="hljs-keyword">if</span> (row &lt; <span class="hljs-built_in">size</span> &amp;&amp; col &lt; <span class="hljs-built_in">size</span>) {
          <span class="hljs-keyword">float</span> sum = <span class="hljs-number">0.0</span>;
-        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; TILE_DIM; i++) {
-            sum += multiply(matA[threadIdx.y][i], matB[i][threadIdx.x]);
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-built_in">size</span>; i++) {
+            sum += multiply(matA[row * <span class="hljs-built_in">size</span> + i], matB[i * <span class="hljs-built_in">size</span> + col]);
         }
         
-        res[row * N + col] = sum;
+        res[row * <span class="hljs-built_in">size</span> + col] = sum;
     }
 }
 
@@ -889,21 +1037,21 @@ Maximale Anzahl von Warps pro Multiprozessor: 48
     cudaMalloc((<span class="hljs-keyword">void</span>**)&amp;d_matA, matSizeBytes); <span class="hljs-comment">// Speicherallokation auf dem Device</span>
     cudaMalloc((<span class="hljs-keyword">void</span>**)&amp;d_matB, matSizeBytes);
     cudaMalloc((<span class="hljs-keyword">void</span>**)&amp;d_res, matSizeBytes);
-    ...
+    <span class="hljs-comment">//...</span>
 </div></code></pre>
 <hr>
-<p><strong>Matrixmultiplikation: mit Tiling</strong></p>
-<pre class="hljs"><code><div>    ...
-    cudaMemcpy(d_matA, h_matA, matSizeByte, cudaMemcpyHostToDevice); <span class="hljs-comment">// Von Host zu Device</span>
-    cudaMemcpy(d_matB, h_matB, matSizeByte, cudaMemcpyHostToDevice);
+<p><strong>Matrixmultiplikation: Anpassung der Bockgröße</strong></p>
+<pre class="hljs"><code><div>    <span class="hljs-comment">//...</span>
+    cudaMemcpy(d_matA, h_matA, matSizeBytes, cudaMemcpyHostToDevice); <span class="hljs-comment">// Von Host zu Device</span>
+    cudaMemcpy(d_matB, h_matB, matSizeBytes, cudaMemcpyHostToDevice);
 
-    <span class="hljs-function">dim3 <span class="hljs-title">blockSize</span><span class="hljs-params">(TILE_DIM,TILE_DIM)</span></span>;
+    <span class="hljs-function">dim3 <span class="hljs-title">blockSize</span><span class="hljs-params">(<span class="hljs-number">16</span>,<span class="hljs-number">16</span>)</span></span>; <span class="hljs-comment">// 16 * 16 = 256 % 32 == 0</span>
     <span class="hljs-function">dim3 <span class="hljs-title">gridSize</span><span class="hljs-params">((matSize + blockSize.x<span class="hljs-number">-1</span>)/blockSize.x, (matSize + blockSize.y<span class="hljs-number">-1</span>)/blockSize.y)</span></span>;
 
     mat_mul &lt;&lt;&lt;gridSize, blockSize&gt;&gt;&gt;(d_matA, d_matB, d_res, matSize);
 
     cudaDeviceSynchronize();
-    cudaMemcpy(h_res, d_res, matSizeByte, cudaMemcpyDeviceToHost); <span class="hljs-comment">// Von Device zu Host</span>
+    cudaMemcpy(h_res, d_res, matSizeBytes, cudaMemcpyDeviceToHost); <span class="hljs-comment">// Von Device zu Host</span>
     cudaFree(d_matA); cudaFree(d_matB); cudaFree(d_res); <span class="hljs-comment">// Speicherfreigabe Device</span>
     <span class="hljs-built_in">free</span>(h_matA); <span class="hljs-built_in">free</span>(h_matB); <span class="hljs-built_in">free</span>(h_res); <span class="hljs-comment">// Speicherfreigabe Host</span>
     cudaDeviceReset();
@@ -927,7 +1075,7 @@ Thread Block Clusters als neue Abstraktionsebene</p>
 <li>Einführung von DSMEM innerhalb von Thread Block Clustern</li>
 </ul>
 <hr>
-<h2 id="local--vs-shared--vs-global-memory">Local- vs Shared- vs Global-Memory</h2>
+<h3 id="local--vs-shared--vs-global-memory">Local- vs Shared- vs Global-Memory</h3>
 <table>
 <thead>
 <tr>
@@ -978,7 +1126,7 @@ Thread Block Clusters als neue Abstraktionsebene</p>
 <li>Implementierung Abhängig von CC</li>
 </ul>
 <hr>
-<h2 id="local--vs-shared--vs-global-memory">Local- vs Shared- vs Global-Memory</h2>
+<h3 id="local--vs-shared--vs-global-memory">Local- vs Shared- vs Global-Memory</h3>
 <p>Speicherzugriffszeit:</p>
 <ul>
 <li>registers (wenige Taktzyklen)</li>
@@ -987,7 +1135,7 @@ Thread Block Clusters als neue Abstraktionsebene</p>
 <li>local memory (einige hundert Taktzyklen, bei Cache Miss)</li>
 </ul>
 <hr>
-<h2 id="besondere-speicherbereiche">Besondere Speicherbereiche</h2>
+<h3 id="besondere-speicherbereiche">Besondere Speicherbereiche</h3>
 <ul>
 <li>Zero Copy Memory</li>
 <li>Constant Memory</li>
@@ -1075,7 +1223,7 @@ cudaBindTexture(<span class="hljs-literal">NULL</span>, texRef, deviceData, <spa
     <span class="hljs-keyword">if</span> (row &lt; <span class="hljs-built_in">size</span> &amp;&amp; col &lt; <span class="hljs-built_in">size</span>) {
          <span class="hljs-keyword">float</span> sum = <span class="hljs-number">0.0</span>;
         aTile[threadIdx.y][threadIdx.x] = matA[row*TILE_DIM+threadIdx.x]; <span class="hljs-comment">// Laden der globalen Daten in die Tiles</span>
-        bTile[threadIdx.y][threadIdx.x] = matB[threadIdx.y*N+col];
+        bTile[threadIdx.y][threadIdx.x] = matB[threadIdx.y*TILE_DIM+col];
         __syncthreads(); <span class="hljs-comment">// Wichtig! Synchronisierung nach Speicheroperationen!</span>
 
         <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; TILE_DIM; i++) {
@@ -1125,19 +1273,31 @@ cudaBindTexture(<span class="hljs-literal">NULL</span>, texRef, deviceData, <spa
 
     mat_mul &lt;&lt;&lt;gridSize, blockSize&gt;&gt;&gt;(d_matA, d_matB, d_res, matSize);
 
-    <span class="hljs-keyword">cuda_t</span> status = cudaGetLastError();
+    cudaError_t status = cudaGetLastError();
 
     <span class="hljs-keyword">if</span> (status != cudaSuccess) {
         <span class="hljs-keyword">return</span> <span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">"Kernel Launch failed: %s\n"</span>, cudaGetErrorString(status));
     }
 
     cudaDeviceSynchronize();
-    cudaMemcpy(h_res, d_res, matSizeByte, cudaMemcpyDeviceToHost); <span class="hljs-comment">// Von Device zu Host</span>
+    cudaMemcpy(h_res, d_res, matSizeBytes, cudaMemcpyDeviceToHost); <span class="hljs-comment">// Von Device zu Host</span>
     cudaFree(d_matA); cudaFree(d_matB); cudaFree(d_res); <span class="hljs-comment">// Speicherfreigabe Device</span>
     <span class="hljs-built_in">free</span>(h_matA); <span class="hljs-built_in">free</span>(h_matB); <span class="hljs-built_in">free</span>(h_res); <span class="hljs-comment">// Speicherfreigabe Host</span>
     cudaDeviceReset();
 }
 </div></code></pre>
+<hr>
+<h3 id="performance-boost-durch-reduktion-globaler-speicherzugriffe">Performance Boost durch Reduktion globaler Speicherzugriffe</h3>
+<p>Im Falle von Tiling: $2 \cdot size * size$</p>
+<pre class="hljs"><code><div>aTile[threadIdx.y][threadIdx.x] = matA[row*TILE_DIM+threadIdx.x]; <span class="hljs-comment">// Laden der globalen Daten in die Tiles</span>
+bTile[threadIdx.y][threadIdx.x] = matB[threadIdx.y*TILE_DIM+col];
+</div></code></pre>
+<p>Ohne Tiling: $2 * size * size * size$</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> k = <span class="hljs-number">0</span>; k &lt; <span class="hljs-built_in">size</span>; k++) {
+    sum += multiply(matA[row * <span class="hljs-built_in">size</span> + k], matB[k * <span class="hljs-built_in">size</span> + col]);
+}
+</div></code></pre>
+<p>Für <em>16384x16384</em> ~900.000.000.000 mehr globale Speicherzugriffe</p>
 <hr>
 <h2 id="best-practices"><strong>Best Practices</strong></h2>
 <ol>
@@ -1148,29 +1308,205 @@ cudaBindTexture(<span class="hljs-literal">NULL</span>, texRef, deviceData, <spa
 <li>Verwendung von <strong>Shared Memory</strong> um unnötige Zugriffe auf Global Memory zu vermeiden**</li>
 </ol>
 <hr>
-<h2 id="performancevergleich-cpu-vs-gpu"><strong>Performancevergleich CPU vs. GPU</strong></h2>
+<p><strong>Performance GPU with Tiling</strong></p>
+<p><img src="performance-with-tiling.png" alt="height:550"></p>
 <hr>
-<p><strong>Bilderverzeichnis</strong></p>
-<p>Grid
-https://docs.nvidia.com/cuda/cuda-c-programming-guide/_images/grid-of-thread-blocks.png
-nvprov
-https://face2ai.com/CUDA-F-2-2-%E6%A0%B8%E5%87%BD%E6%95%B0%E8%AE%A1%E6%97%B6/
-Speicherhierarchie
-https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#memory-hierarchy
-Best Practices</p>
+<p><strong>Performance Vergleich Tiling vs Naive</strong></p>
+<p><img src="tiling-vs-naive-total.png" alt="height:550"></p>
+<hr>
+<p><strong>Performancevergleich CPU vs. GPU</strong></p>
+<p><img src="cpu-vs-gpu.png" alt="height:550"></p>
+<hr>
+<p><strong>Performancevergleich CPU vs. GPU</strong></p>
+<p><img src="cpu-vs-gpu-small.png" alt="height:550"></p>
+<hr>
+<h1 id="brbr-gpu-beschleunigung-und-ihre"><br><br>        GPU-Beschleunigung und ihre</h1>
+<h1 id="anwendungen">                        Anwendungen</h1>
+<hr>
+<h2 id="gpu-beschleunigung-f%C3%BCr-deep-learning"><strong>GPU-Beschleunigung für Deep Learning</strong></h2>
+<ul>
+<li>
+<h4 id="deep-learning">Deep Learning</h4>
+<ul>
+<li>Training komplexer neuronaler Netzwerke.</li>
+<li>GPUs beschleunigen durch parallele Berechnungen.</li>
+<li>Matrixmultiplikationen profitieren von paralleler GPU-Verarbeitung.
+<img src="AI.png" alt="vertical width:280px"></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="gpu-beschleunigung-f%C3%BCr-deep-learning"><strong>GPU-Beschleunigung für Deep Learning</strong></h2>
+<ul>
+<li>
+<h5 id="cudnn-cuda-deep-neural-network-library">CuDNN (CUDA Deep Neural Network Library)</h5>
+<ul>
+<li>NVIDIA's GPU-optimierte Deep Learning-Bibliothek.</li>
+<li>Maßgeschneidert für Deep Learning.</li>
+<li>Effiziente GPU-Algorithmen, insbesondere für CNNs.
+<img src="CuDNN.png" alt="vertical width:250px"></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="gpu-beschleunigung-f%C3%BCr-deep-learning"><strong>GPU-Beschleunigung für Deep Learning</strong></h2>
+<ul>
+<li>
+<h4 id="pytorch">PyTorch</h4>
+<ul>
+<li>Flexibles und dynamisches Deep Learning-Framework.</li>
+<li>Nutzt GPU-Beschleunigung für effizientes Training von neuronalen Netzwerken.</li>
+<li>Insbesondere in der Forschung weit verbreitet.
+<img src="pytorch.png" alt="vertical width:380px"></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="gpu-beschleunigung-f%C3%BCr-deep-learning"><strong>GPU-Beschleunigung für Deep Learning</strong></h2>
+<ul>
+<li>
+<h4 id="tensorflow">Tensorflow</h4>
+<ul>
+<li>Open-Source-Framework für maschinelles Lernen.</li>
+<li>Integrierte GPU-Unterstützung für effizientes Training.</li>
+<li>Branchenführer für industrielle Anwendungen.
+<img src="tensorflow.png" alt="vertical width:200px"></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="gpu-beschleunigung-f%C3%BCr-nlp"><strong>GPU Beschleunigung für NLP</strong></h2>
+<ul>
+<li>
+<h4 id="sequenzielle-modelle">Sequenzielle Modelle</h4>
+<ul>
+<li>GPU-Beschleunigung von Transformer-Modellen für maschinelles Übersetzen und Sprachmodellierung.</li>
+</ul>
+</li>
+<li>
+<h4 id="textverarbeitung">Textverarbeitung</h4>
+<ul>
+<li>Beschleunigung von NLP-Aufgaben wie Tokenisierung.
+<img src="nlp.png" alt="vertical width:400px"></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="gpu-beschleunigung-f%C3%BCr-crypto-mining"><strong>GPU Beschleunigung für Crypto-Mining</strong></h2>
+<ul>
+<li>
+<p><strong>Mining</strong></p>
+<ul>
+<li>Mining ist der Prozess, bei dem Transaktionen verifiziert und zur Blockchain hinzugefügt werden.</li>
+</ul>
+</li>
+<li>
+<p><strong>Effizienzsteigerung</strong></p>
+<ul>
+<li>GPU-Einsatz verbessert die Energieeffizienz im Vergleich zu herkömmlichen Methoden.</li>
+</ul>
+</li>
+</ul>
+<h2 id="vertical-width200px">       <img src="bitcoin.png" alt="vertical width:200px"></h2>
+<hr>
+<h1 id="brbrbr-ausblick-und-trends"><br><br><br>                  Ausblick und Trends</h1>
+<hr>
+<h2 id="gpu-architekturen-der-zukunft"><strong>GPU-Architekturen der Zukunft</strong></h2>
+<ul>
+<li>
+<p><strong>Innovative Fortschritte</strong></p>
+<ul>
+<li>Neue Technologien wie Tensor Cores und Ray Tracing, verspricht Leistungssteigerung.</li>
+</ul>
+</li>
+<li>
+<p><strong>Optimierung für Machine Learning</strong></p>
+<ul>
+<li>Tensor Cores ermöglichen optimierte Berechnungen, was zu schnellerem und effizienterem Machine Learning führt.</li>
+</ul>
+</li>
+<li>
+<p><strong>Grafikanwendungen und Realismus</strong></p>
+<ul>
+<li>Ray Tracing verbessert die Grafikdarstellung für realistischere visuelle Erlebnisse.</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="neue-anwendungsfelder"><strong>Neue Anwendungsfelder</strong></h2>
+<ul>
+<li>
+<p><strong>Medizin</strong></p>
+<ul>
+<li>In der medizinischen Bildgebung für schnellere Diagnosen und komplexe Bildverarbeitung.</li>
+</ul>
+</li>
+<li>
+<p><strong>Finanztechnologie</strong></p>
+<ul>
+<li>Einsatz in der Finanzbranche für Analysen, Risikobewertungen und Algorithmen im Hochfrequenzhandel.</li>
+</ul>
+</li>
+<li>
+<p><strong>Robotik</strong></p>
+<ul>
+<li>GPU-Einsatz in der Robotik für Sensordatenverarbeitung und komplexe Steuerungsalgorithmen.</li>
+</ul>
+</li>
+</ul>
 <hr>
 <p><strong>Quellenverzeichnis</strong></p>
-<p>Threadorganization
+<pre><code>CPU vs. GPU: Vergleich
+https://ark.intel.com
+https://www.nvidia.com
+CPU vs. GPU: Hardware-Unterschiede
+https://www.anandtech.com
+GPU-Beschleunigung für Deep Learning
+https://developer.nvidia.com/deep-learning
+https://www.tensorflow.org/guide/gpu
+https://pytorch.org/get-started/locally/
+</code></pre>
+<hr>
+<pre><code>GPU Beschleunigung für NLP
+https://www.deepspeed.ai/
+https://developer.nvidia.com/blog/nlp-architects-guide-to-ai-acceleration-with-tensorcore/
+GPU Beschleunigung für Crypto-Mining
+https://en.bitcoin.it/wiki/Mining 
+https://ethereum.org/
+GPU-Architekturen der Zukunft
+https://www.nvidia.com/en-gb/research/
+Neue Anwendungsfelder
+https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3496509/
+https://www.nvidia.com/en-us/industries/finance/ai-trading-brief/
+https://developer.nvidia.com/blog/cuda-spotlight-gpu-accelerated-guidance-and-control-robotic-systems/
+Threadorganisation
 https://docs.nvidia.com/cuda/cuda-c-programming-guide/
+https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#programming-model
 SIMT vs SIMD
 https://yosefk.com/blog/simd-simt-smt-parallelism-in-nvidia-gpus.html
+https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#simt-architecture
 Speicherhierarchie
 https://resources.nvidia.com/en-us-tensor-core/gtc22-whitepaper-hopper
 https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html
 Tiling
-https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html</p>
+https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html
+</code></pre>
 <hr>
-<p><strong>Quellenverzeichnis</strong></p>
+<p>Bildverzeichnis:</p>
+<pre><code>https://bitcoin.org/img/icons/logo-footer.svg?1702235293
+https://upload.wikimedia.org/wikipedia/commons/2/2d/Tensorflow_logo.svg
+https://wissenstransfer.innohub13.de/wp-content/uploads/2021/04/wissenstransfer_NLP_TitelIllustration.svg
+https://bfirst.tech/wp-content/uploads/2022/04/konwolucyjne-sieci.svg
+https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenCL_logo.svg
+https://www.nvidia.com/content/dam/en-zz/Solutions/about-nvidia/logo-and-brand/01-nvidia-logo-vert-500x200-2c50-l@2x.png
+https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/SYCL_logo.svg/1200px-SYCL_logo.svg
+https://avatars.githubusercontent.com/u/16900649?s=200&amp;v=4
+https://upload.wikimedia.org/wikipedia/commons/f/fe/Vulkan_logo.svg
+https://upload.wikimedia.org/wikipedia/commons/c/c6/PyTorch_logo_black.svg
+https://docs.nvidia.com/cuda/cuda-c-programming-guide/_images/grid-of-thread-blocks.png
+https://face2ai.com/CUDA-F-2-2-%E6%A0%B8%E5%87%BD%E6%95%B0%E8%AE%A1%E6%97%B6/
+https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#memory-hierarchy
+</code></pre>
 
 </body>
 </html>
